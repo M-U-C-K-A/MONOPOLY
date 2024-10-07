@@ -54,7 +54,8 @@ void display_menu() {
 	printf("1. Lancer les dés\n");
 	printf("2. Voir une carte\n");
 	printf("3. Paramètres\n");
-	printf("4. Quitter le jeu\n");
+	printf("4. Règles\n");
+	printf("5. Quitter le jeu\n");
 	printf("Choisissez une option: ");
 }
 
@@ -135,8 +136,13 @@ int main(void) {
 				}
 				break;
 			}
-
-			case 4: {
+			case 4: 
+			{
+				clear_terminal();
+				show_rules();
+    			break;
+			}
+			case 5: {
 				// Quitter le jeu
 				running = 0;
 				break;

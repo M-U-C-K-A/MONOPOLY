@@ -83,93 +83,65 @@ MonopolyCase** init_board(void)
 {
 	MonopolyCase **board = (MonopolyCase **)malloc(40 * sizeof(MonopolyCase *));
 	
-	board[0] = create_case(0, "Start", 0, 0, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[1] = create_case(1, "Boulevard de Belleville", 60, 2, 50, 10, 30, 90, 160, 250,0 ,1);
-	board[2] = create_case(2, "Community Chest", 0, 0, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[3] = create_case(3, "Rue Lecourbe", 60, 4, 50, 20, 60, 180, 320, 450,0 ,3);
-	board[4] = create_case(4, "Income Tax", 0, 200, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[5] = create_case(5, "Montparnasse Station", 200, 25, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[6] = create_case(6, "Rue de Vaugirard", 100, 6, 50, 30, 90, 270, 400, 550,0 ,2);
-	board[7] = create_case(7, "Chance", 0, 0, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[8] = create_case(8, "Rue de Courcelles", 100, 6, 50, 30, 90, 270, 400, 550,0 ,4);
-	board[9] = create_case(9, "Avenue de la Republique", 120, 8, 50, 40, 100, 300, 450, 600,0 ,5);
-	board[10] = create_case(10, "Just Visiting / Jail", 0, 0, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[11] = create_case(11, "Boulevard de la Villette", 140, 10, 100, 50, 150, 450, 625, 750,0 ,5);
-	board[12] = create_case(12, "Water Works", 150, 0, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[13] = create_case(13, "Rue de la Paix", 140, 10, 100, 50, 150, 450, 625, 750,0 ,0);
-	board[14] = create_case(14, "Avenue de Neuilly", 160, 12, 100, 50, 150, 450, 625, 750,0 ,0);
-	board[15] = create_case(15, "Lyon Station", 200, 25, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[16] = create_case(16, "Avenue de la Republique", 200, 25, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[17] = create_case(17, "Community Chest", 0, 0, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[18] = create_case(18, "Avenue des Champs-elysees", 350, 35, 200, 175, 500, 1100, 1300, 1500,0 ,0);
-	board[19] = create_case(19, "Luxury Tax", 0, 100, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[20] = create_case(20, "Rue de la Victoire", 400, 50, 200, 200, 600, 1400, 1700, 2000,0 ,0);
-	board[21] = create_case(21, "Saint-Lazare Station", 200, 25, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[22] = create_case(22, "Chance", 0, 0, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[23] = create_case(23, "Avenue de Breteuil", 300, 26, 200, 130, 390, 900, 1100, 1275,0 ,0);
-	board[24] = create_case(24, "Avenue Foch", 300, 26, 200, 130, 390, 900, 1100, 1275,0 ,0);
-	board[25] = create_case(25, "Community Chest", 0, 0, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[26] = create_case(26, "Boulevard des Capucines", 320, 28, 200, 150, 450, 1000, 1200, 1400,0 ,0);
-	board[27] = create_case(27, "Saint-Lazare Station", 200, 25, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[28] = create_case(28, "Chance", 0, 0, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[29] = create_case(29, "Rue la Fayette", 280, 24, 150, 120, 360, 850, 1025, 1200,0 ,0);
-	board[30] = create_case(30, "Go to Jail", 0, 0, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[31] = create_case(31, "Avenue de la Bourdonnais", 300, 32, 200, 140, 410, 950, 1200, 1450,0 ,0);
-	board[32] = create_case(32, "Bastille Station", 200, 25, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[33] = create_case(33, "Avenue de Trocadero", 350, 35, 200, 175, 500, 1100, 1300, 1500,0 ,0);
-	board[34] = create_case(34, "Community Chest", 0, 0, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[35] = create_case(35, "Park Lane", 350, 35, 200, 175, 500, 1100, 1300, 1500,0 ,0);
-	board[36] = create_case(36, "Mayfair", 400, 50, 200, 200, 600, 1400, 1700, 2000,0 ,0);
+	board[0] = create_case(0, "no house", 0, 0, 0, 0, 0, 0, 0, 0,0 ,0);
+	board[1] = create_case(1, "one house", 0, 0, 0, 0, 0, 0, 0, 0, 0 ,1);
+	board[2] = create_case(2, "two house", 0, 0, 0, 0, 0, 0, 0, 0, 0 ,2);
+	board[3] = create_case(3, "tree house", 0, 0, 0, 0, 0, 0, 0, 0, 0 ,3);
+	board[4] = create_case(4, "four house", 0, 0, 0, 0, 0, 0, 0, 0, 0 ,4);
+	board[5] = create_case(5, "five house", 0, 0, 0, 0, 0, 0, 0, 0, 0 ,5);
 
 	return board;
 }
 
+// Fonction check_house
+const char* check_house(MonopolyCase* case_ptr, int line)
+{
+    static char output[10];
 
-
-const char* HOUSE_EMOJI = "🏠";  // Emoji de la maison
-const char* HOTEL_EMOJI = "🏨";  // Emoji de l'hôtel
-const char* HOUSE_CHAR = "H";    // Repli en cas de problème avec les emojis
-const char* HOTEL_CHAR = "O";    // Repli pour l'hôtel
-
-// Fonction pour afficher les maisons ou l'hôtel en fonction du house_count
-char* house(MonopolyCase *property) {
-    static char output[64]; // Chaîne suffisamment grande pour stocker plusieurs maisons/hôtel et des espaces
-    int house_count = property->house_count;
-    
-    // On initialise la chaîne avec 14 espaces
-    memset(output, ' ', 14);
-    output[14] = '\0'; // Assure que la chaîne est bien terminée
-
-    // Si house_count == 5, on met un hôtel
-    if (house_count == 5) {
-        strcpy(output, "🏨"); // Copie l'emoji hôtel au début
+    switch (case_ptr->house_count) {
+    case 0:
+        return "  ";
+    case 1:
+        return line == 0 ? "🏠" : "";
+    case 2:
+        return "🏠";
+    case 3:
+        return line == 0 ? "🏠🏠" : "🏠";
+    case 4:
+        return "🏠🏠";
+    case 5:
+        return line == 0 ? "🏨" : "";
     }
-    // Si house_count est entre 1 et 4, on affiche des maisons
-    else if (house_count >= 1 && house_count <= 4) {
-        output[0] = '\0'; // Vide la chaîne avant d'ajouter les maisons
-        for (int i = 0; i < house_count; i++) {
-            strcat(output, "🏠"); // Concatène les emojis maison
-        }
-    }
-
-    // La chaîne est complétée avec des espaces jusqu'à 14 caractères si nécessaire
-    int len = strlen(output);
-    for (int i = len; i < 14; i++) {
-        output[i] = ' '; // Ajoute des espaces après les maisons ou l'hôtel
-    }
-    output[14] = '\0'; // Terminateur de chaîne
-
     return output;
 }
 
-
 void show_board(MonopolyCase **board)
 {
+	printf("no house : \n");
+	printf("|%-2s| \n",check_house(board[0],0));
+	printf("|%-2s| \n",check_house(board[0],1));
+	printf("one house : \n");
+	printf("|%-2s| \n",check_house(board[1],0));
+	printf("|%-2s| \n",check_house(board[1],1));
+	printf("two house : \n");
+	printf("|%-2s| \n",check_house(board[2],0));
+	printf("|%-2s| \n",check_house(board[2],1));
+	printf("tree house : \n");
+	printf("|%-2s| \n",check_house(board[3],0));
+	printf("|%-2s| \n",check_house(board[3],1));
+	printf("four house : \n");
+	printf("|%-2s| \n",check_house(board[4],0));
+	printf("|%-2s| \n",check_house(board[4],1));
+	printf("five house : \n");
+	printf("|%-2s| \n",check_house(board[5],0));
+	printf("|%-2s| \n",check_house(board[5],1));
+
+
+	printf("\n\n");
+/*
 	printf("            ║              ║              ║              ║              ║              ║              ║             ║ Compagnie de ║              ║               \n");
 	printf(" Parc       ║   Avenue     ║    chance    ║  Boulevard   ║    Avenue    ║   Gare du    ║ Faubourg     ║  Place de   ║ distribution ║   Rue la     ║  Allez en     \n");
 	printf("Gratuit     ║   Matignon   ║      🍀      ║  Malesherbes ║ Henri-Martin ║   Nord  🚅   ║ Saint-Honoré ║  la bourse  ║   des eaux   ║   fayette    ║  prison       \n");
-	printf("%s║%s║%s║%s║%s║%s║%s║%s║%s║%s \n",
-	house(board[20]),house(board[21]),house(board[22]),house(board[23]),house(board[24]),house(board[25]),house(board[26]),house(board[27]),house(board[28]),house(board[29]),house(board[30]));
 	printf("════════════╬"BG_RED"══════════════"RESET"╩══════════════╩"BG_RED"══════════════"RESET"╩"BG_RED"══════════════"RESET"╩══════════════╩"BG_YELLOW"══════════════"RESET"╩"BG_YELLOW"═════════════"RESET"╩══════════════╩"BG_YELLOW"══════════════"RESET"╬═══════════════   \n");
 	printf("place       "BG_ORANGE"║"RESET" \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  "BG_GREEN"║"RESET" Avenue		\n");
 	printf("Pigalle     "BG_ORANGE"║"RESET" \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  "BG_GREEN"║"RESET" de breteuil	\n");
@@ -198,12 +170,9 @@ void show_board(MonopolyCase **board)
 	printf("Boulevard de"BG_BRIGHT_MAGENTA"║"RESET" \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  "BG_BLUE"║"RESET" Rue de    	\n");
 	printf("la villette "BG_BRIGHT_MAGENTA"║"RESET" \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  "BG_BLUE"║"RESET" la Paix   	\n");
 	printf("════════════╬"BG_BRIGHT_CYAN"══════════════"RESET"╦"BG_BRIGHT_CYAN"══════════════"RESET"╦══════════════╦"BG_BRIGHT_CYAN"══════════════"RESET"╦══════════════╦══════════════╦"BG_BROWN"════════════"RESET"╦══════════════╦"BG_BROWN"═══════════════"RESET"╬═══════════════ \n");
-    printf("%-14s║%-14s║%-14s║%-14s║%-14s║%-14s║%-14s║%-14s║%-14s║%-14s\n",
-           house(board[10]), house(board[9]), house(board[8]), house(board[7]), 
-           house(board[6]), house(board[5]), house(board[4]), house(board[3]), 
-           house(board[2]), house(board[1]), house(board[0]));
 	printf(" Simple     ║ Avenue de la ║  Rue de      ║    chance    ║ Rue de       ║ Gare  🚅     ║  Impôts sur  ║  Rue       ║  Caisse de   ║ Boulevard de  ║  Case         \n");
 	printf(" visite     ║ République   ║  Courcelles  ║      🍀      ║ Vaugirard    ║ Montparnasse ║  le revenue  ║  Lecourbe  ║  Communauté  ║ Belleville    ║  Départ       \n");
+	*/
 }
 
 void clear_terminal(void)
@@ -248,3 +217,91 @@ void show_board(MonopolyCase **board)
 	printf(" visite     ║ République   ║  Courcelles  ║      🍀      ║ Vaugirard    ║ Montparnasse ║  le revenue  ║  Lecourbe  ║  Communauté  ║ Belleville    ║  Départ       \n");
 }
 */
+
+
+void	show_rules(void)
+{
+    // Encadrement du titre des règles
+    printf(DIM BOLD "======================================================\n");
+    printf("=             ⭐️ RÈGLES DU MONOPOLY ⭐️             =\n");
+    printf("======================================================\n\n" RESET);
+
+    printf(BOLD UNDERLINE "1. OBJECTIF DU JEU\n" RESET);
+    printf("   L'objectif du Monopoly est de ruiner les autres joueurs en acquérant des propriétés,\n");
+    printf("   construisant des maisons et hôtels, et en leur faisant payer des loyers élevés.\n\n");
+
+    printf(BOLD UNDERLINE "2. CONFIGURATION DU JEU\n" RESET);
+    printf("   - Le jeu se joue de 2 à 8 joueurs.\n");
+    printf("   - Chaque joueur commence avec 1500 unités de monnaie.\n");
+    printf("   - Les joueurs choisissent une couleur et un pion. Les pions sont placés sur la case \"Départ\".\n\n");
+
+    printf(BOLD UNDERLINE "3. DÉROULEMENT DU JEU\n" RESET);
+    printf("   - Les joueurs lancent les dés à tour de rôle pour avancer sur le plateau.\n");
+    printf("   - En fonction de la case sur laquelle ils atterrissent, ils peuvent :\n");
+    printf("     1. Acheter une propriété\n");
+    printf("     2. Payer un loyer\n");
+    printf("     3. Tirer une carte Chance ou Caisse de Communauté\n");
+    printf("     4. Payer des taxes\n");
+    printf("     5. Aller en prison\n\n");
+
+    printf(BOLD UNDERLINE "4. LANCER DES DÉS\n" RESET);
+    printf("	- Lors de leur tour, les joueurs lancent deux dés.\n");
+    printf("	- Si un joueur fait un double, il joue à nouveau. Trois doubles consécutifs\n");
+    printf("     envoient le joueur directement en prison.\n\n");
+
+    printf(BOLD UNDERLINE "5. PROPRIÉTÉS\n" RESET);
+    printf("	- Lorsqu'un joueur atterrit sur une propriété non possédée, il peut l'acheter.\n");
+    printf("	- Si le joueur choisit de ne pas acheter, la propriété est mise aux enchères.\n");
+    printf("	- Les propriétés peuvent être hypothéquées pour lever des fonds.\n\n");
+
+    printf(BOLD UNDERLINE "6. LOYERS\n" RESET);
+    printf("	- Les loyers sont payés lorsque des joueurs atterrissent sur des propriétés.\n");
+    printf("	- Les loyers varient en fonction du nombre de maisons ou d'hôtels sur la propriété.\n");
+    printf("	- Les loyers sont doublés si le propriétaire possède tous les terrains d'une même couleur.\n\n");
+
+    printf(BOLD UNDERLINE "7. MAISONS ET HÔTELS\n" RESET);
+    printf("	- Un joueur peut construire des maisons sur ses propriétés lorsqu'il possède\n");
+    printf("     tous les terrains d'une couleur.\n");
+    printf("	- Les maisons doivent être construites uniformément : on ne peut pas construire\n");
+    printf("     une deuxième maison sur une propriété avant que chaque propriété de l'ensemble\n");
+    printf("     n'ait une maison.\n");
+    printf("	- Une fois que le joueur a quatre maisons sur une propriété, il peut construire un hôtel.\n\n");
+
+    printf(BOLD UNDERLINE "8. CARDS CHANCE ET CAISSE DE COMMUNAUTÉ\n" RESET);
+    printf("	- Les cartes Chance et Caisse de Communauté contiennent des instructions variées :\n");
+    printf("	- Gagner de l'argent\n");
+    printf("	- Payer une amende\n");
+    printf("	- Se déplacer sur le plateau\n");
+    printf("	- Un joueur doit suivre les instructions de la carte tirée.\n\n");
+
+    printf(BOLD UNDERLINE "9. IMPÔTS ET TAXES\n" RESET);
+    printf("	- Les joueurs doivent payer des taxes lorsqu'ils atterrissent sur certaines cases.\n");
+    printf("	- Impôt sur le revenu : 200 unités de monnaie\n");
+    printf("	- Taxe de luxe : 75 unités de monnaie\n");
+    printf("	- Les taxes doivent être payées immédiatement.\n\n");
+
+    printf(BOLD UNDERLINE "10. PRISON\n" RESET);
+    printf("	- Un joueur peut être envoyé en prison de plusieurs manières :\n");
+    printf("     	1. En tombant sur la case \"Allez en Prison\".\n");
+    printf("     	2. En tirant une carte indiquant de se rendre en prison.\n");
+    printf("	- Pour sortir de prison, un joueur peut :\n");
+    printf("	- Payer une amende de 50 unités de monnaie.\n");
+    printf("	- Utiliser une carte «Sortie de Prison». \n");
+    printf("	- Lancer un double (dans ce cas, il avance du montant du double et joue à nouveau).\n");
+    printf("	- Si le joueur n'a pas obtenu de double après trois lancers, il doit payer l'amende et sortir.\n\n");
+
+    printf(BOLD UNDERLINE "11. FAILLITE\n" RESET);
+    printf("	- Si un joueur ne peut pas payer une dette, il doit vendre des propriétés ou\n");
+    printf("     hypothéquer des terrains pour obtenir des fonds.\n");
+    printf("	- Un joueur est déclaré en faillite s'il doit de l'argent à un autre joueur et\n");
+    printf("     n'a pas de fonds disponibles. Il doit alors donner toutes ses propriétés et\n");
+    printf("     son argent au créancier.\n\n");
+
+    printf(BOLD UNDERLINE "12. FIN DU JEU\n" RESET);
+    printf("	- Le jeu se termine lorsqu'un joueur a fait faillite et qu'il ne reste qu'un joueur.\n");
+    printf("	- Ce joueur est déclaré vainqueur et remporte la partie.\n\n");
+
+    printf(DIM BOLD "======================================================\n");
+    printf("=         Merci d'avoir consulté les règles!         =\n");
+    printf("======================================================\n\n" RESET);
+}

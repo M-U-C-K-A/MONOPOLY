@@ -78,3 +78,5 @@ void show_board(MonopolyCase **board);
 void format_string(char *str, char *output);
 void format_price(int price, char *output);
 char* house(MonopolyCase *property);
+void    show_rules(void);
+const char* check_house(MonopolyCase* case_ptr, int line);
