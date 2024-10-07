@@ -3,6 +3,15 @@
 #include <string.h>
 #include <windows.h>
 
+/*
+ce fichier permet de tester 
+pour l'affiche l'ajout de maisos
+dans le but de le split en deux ou
+de mettre un hotel si le nombre est a 5
+*/
+
+
+
 int main(int argc, char *argv[])
 {
     SetConsoleOutputCP(CP_UTF8);
