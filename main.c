@@ -44,7 +44,8 @@ Player create_player(int player_number) {
 }
 
 // Fonction pour lancer les dés
-int roll_dice() {
+int roll_dice()
+{
 	return (rand() % 6 + 1) + (rand() % 6 + 1); // Somme de 2 dés (1-6)
 }
 
@@ -59,6 +60,58 @@ void display_menu() {
 	printf("Choisissez une option: ");
 }
 
+void player_card(Player *players, int player_count)
+{
+
+	char *words[] = {"Départ", 
+	"Boulevard de Belleville", 
+	"Caisse de Communauté (1)", 
+	"Impôts sur le revenue", 
+	"Gare Montparnasse", 
+	"Chance (1)", 
+	"Rue de Courcelles", 
+	"Avenue de la République", 
+	"Simple visite / prison", 
+	"Boulevard de la vilette",
+	"Compagnie électrique",
+	"Avenue de Neuilly",
+	"Rue de Paradis",
+	"Gare de Lyon",
+	"Avenue Mozard",
+	"Caisse de Communauté (2)",
+	"Boulevard Saint-Michel",
+	"Place Pigalle",
+	"Parc Gratuit",
+	"Avenue Matignon",
+	"Chance (2)",
+	"Boulevard Malesherbes",
+	"Avenue Henri-Martin",
+	"Gare du Nord",
+	"Faubourg Saint-Honoré",
+	"Place de la Bourse",
+	"Compagnie des eaux",
+	};
+	for (int i = 0; i < player_count; i++) {
+		Player *p = &players[i];
+		char name[50];
+		strncpy(name, p->name, 10);
+		char color[10];
+		strncpy(color, p->color, 10);
+		int money = p->money;
+		int position = p->position;
+		int in_jail = p->in_jail;
+
+		printf(color);
+		printf(DIM"╔══════════════════════════════╗\n");
+		printf("║"RESET"%s  %-10s %s" DIM "║\n",
+		       color, name, in_jail ? RED"PLAYER IN JAIL ! " : "                 ");
+		printf("║"RESET"%s  $%-10d  case:%-8d  "DIM"║\n", color, money, position);
+		printf("╚══════════════════════════════╝\n");
+		printf(RESET);
+	}
+}
+
+
 int main(void) {
 	SetConsoleOutputCP(CP_UTF8);
 	srand(time(NULL)); // Initialisation du générateur de nombres aléatoires
@@ -72,7 +125,7 @@ int main(void) {
 	scanf("%d", &player_count);
 
 	Player players[player_count];
-	for (int i = 0; i < player_count; i++) {
+	for (int i = 0; i < player_count && i < 8; i++) {
 		players[i] = create_player(i);
 	}
 
@@ -83,9 +136,7 @@ int main(void) {
 	while (running) {
 		clear_terminal();
 		show_board(board);
-		
-
-		// Tour du joueur
+		player_card(players, player_count);
 		Player *player = &players[current_player];
 		printf("%s%s%s, c'est votre tour !\n", player->color, player->name, RESET);
 

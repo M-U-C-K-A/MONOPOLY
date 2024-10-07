@@ -1,5 +1,5 @@
 #pragma once
-                                                                                                                                                                           
+																																										   
  //      __  __  ___  _   _  ___  ____   ___  _  __   __                                            
  //     |  \/  |/ _ \| \ | |/ _ \|  _ \ / _ \| | \ \ / /                                            
  //     | |\/| | | | |  \| | | | | |_) | | | | |  \ V /                                             
@@ -55,28 +55,28 @@
 
 // Structure pour chaque case du Monopoly
 typedef struct MonopolyCase {
-    int index;              // Case number
-    char *name;             // Name of the case
-    int price;              // Price of the case
-    int rent;               // Rent on the case
-    int house_price;        // Cost of building houses
-    int rent_1_house;       // Rent with 1 house
-    int rent_2_houses;      // Rent with 2 houses
-    int rent_3_houses;      // Rent with 3 houses
-    int rent_4_houses;      // Rent with 4 houses
-    int rent_hotel;         // Rent with a hotel
-    int owner_id;           // ID of the player who owns the case
-    int house_count;        // Number of houses on the case
+	int index;              // Case number
+	char *name;             // Name of the case
+	int price;              // Price of the case
+	int rent;               // Rent on the case
+	int house_price;        // Cost of building houses
+	int rent_1_house;       // Rent with 1 house
+	int rent_2_houses;      // Rent with 2 houses
+	int rent_3_houses;      // Rent with 3 houses
+	int rent_4_houses;      // Rent with 4 houses
+	int rent_hotel;         // Rent with a hotel
+	int owner_id;           // ID of the player who owns the case
+	int house_count;        // Number of houses on the case
 } MonopolyCase;
 
 // Prototype de la fonction de création d'une case
-void show_card(MonopolyCase **board, int index);
-MonopolyCase* create_case(int index, char *name, int price, int rent, int house_price, int rent_1_house, int rent_2_houses, int rent_3_houses, int rent_4_houses, int rent_hotel, int owner_id, int house_count);
-MonopolyCase** init_board(void);
-void    clear_terminal(void);
-void show_board(MonopolyCase **board);
-void format_string(char *str, char *output);
-void format_price(int price, char *output);
-char* house(MonopolyCase *property);
-void    show_rules(void);
-const char* check_house(MonopolyCase* case_ptr, int line);
+MonopolyCase*       create_case(int index, char *name, int price, int rent, int house_price, int rent_1_house, int rent_2_houses, int rent_3_houses, int rent_4_houses, int rent_hotel, int owner_id, int house_count);
+MonopolyCase**      init_board(void);
+void                clear_terminal(void);
+void                show_card(MonopolyCase **board, int index);
+void                show_board(MonopolyCase **board);
+void                format_string(char *str, char *output);
+void                format_price(int price, char *output);
+char*               house(MonopolyCase *property);
+void                show_rules(void);
+const char*         check_house(MonopolyCase* case_ptr, int line);

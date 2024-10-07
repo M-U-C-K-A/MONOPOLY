@@ -83,12 +83,10 @@ MonopolyCase** init_board(void)
 {
 	MonopolyCase **board = (MonopolyCase **)malloc(40 * sizeof(MonopolyCase *));
 	
-	board[0] = create_case(0, "no house", 0, 0, 0, 0, 0, 0, 0, 0,0 ,0);
-	board[1] = create_case(1, "one house", 0, 0, 0, 0, 0, 0, 0, 0, 0 ,1);
-	board[2] = create_case(2, "two house", 0, 0, 0, 0, 0, 0, 0, 0, 0 ,2);
-	board[3] = create_case(3, "tree house", 0, 0, 0, 0, 0, 0, 0, 0, 0 ,3);
-	board[4] = create_case(4, "four house", 0, 0, 0, 0, 0, 0, 0, 0, 0 ,4);
-	board[5] = create_case(5, "five house", 0, 0, 0, 0, 0, 0, 0, 0, 0 ,5);
+	for (int i = 0; i < 40; i++) {
+		board[i] = create_case(i, (char *) malloc(50 * sizeof(char)), 0, 0, 0, 0, 0, 0, 0, 0, 0, rand() % 6);
+		sprintf(board[i]->name, "case %d", i);
+	}
 
 	return board;
 }
@@ -96,212 +94,149 @@ MonopolyCase** init_board(void)
 // Fonction check_house
 const char* check_house(MonopolyCase* case_ptr, int line)
 {
-    static char output[10];
+	static char output[10];
 
-    switch (case_ptr->house_count) {
-    case 0:
-        return "  ";
-    case 1:
-        return line == 0 ? "🏠" : "";
-    case 2:
-        return "🏠";
-    case 3:
-        return line == 0 ? "🏠🏠" : "🏠";
-    case 4:
-        return "🏠🏠";
-    case 5:
-        return line == 0 ? "🏨" : "";
-    }
-    return output;
+	switch (case_ptr->house_count) {
+	case 0:
+		return "  ";
+	case 1:
+		return line == 0 ? "🏠" : "";
+	case 2:
+		return "🏠";
+	case 3:
+		return line == 0 ? "🏠🏠" : "🏠";
+	case 4:
+		return "🏠🏠";
+	case 5:
+		return line == 0 ? "🏨" : "";
+	}
+	return output;
 }
 
 void show_board(MonopolyCase **board)
 {
-	printf("no house : \n");
-	printf("|%-2s| \n",check_house(board[0],0));
-	printf("|%-2s| \n",check_house(board[0],1));
-	printf("one house : \n");
-	printf("|%-2s| \n",check_house(board[1],0));
-	printf("|%-2s| \n",check_house(board[1],1));
-	printf("two house : \n");
-	printf("|%-2s| \n",check_house(board[2],0));
-	printf("|%-2s| \n",check_house(board[2],1));
-	printf("tree house : \n");
-	printf("|%-2s| \n",check_house(board[3],0));
-	printf("|%-2s| \n",check_house(board[3],1));
-	printf("four house : \n");
-	printf("|%-2s| \n",check_house(board[4],0));
-	printf("|%-2s| \n",check_house(board[4],1));
-	printf("five house : \n");
-	printf("|%-2s| \n",check_house(board[5],0));
-	printf("|%-2s| \n",check_house(board[5],1));
-
-
-	printf("\n\n");
-/*
-	printf("            ║              ║              ║              ║              ║              ║              ║             ║ Compagnie de ║              ║               \n");
-	printf(" Parc       ║   Avenue     ║    chance    ║  Boulevard   ║    Avenue    ║   Gare du    ║ Faubourg     ║  Place de   ║ distribution ║   Rue la     ║  Allez en     \n");
-	printf("Gratuit     ║   Matignon   ║      🍀      ║  Malesherbes ║ Henri-Martin ║   Nord  🚅   ║ Saint-Honoré ║  la bourse  ║   des eaux   ║   fayette    ║  prison       \n");
-	printf("════════════╬"BG_RED"══════════════"RESET"╩══════════════╩"BG_RED"══════════════"RESET"╩"BG_RED"══════════════"RESET"╩══════════════╩"BG_YELLOW"══════════════"RESET"╩"BG_YELLOW"═════════════"RESET"╩══════════════╩"BG_YELLOW"══════════════"RESET"╬═══════════════   \n");
-	printf("place       "BG_ORANGE"║"RESET" \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  "BG_GREEN"║"RESET" Avenue		\n");
-	printf("Pigalle     "BG_ORANGE"║"RESET" \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  "BG_GREEN"║"RESET" de breteuil	\n");
-	printf("════════════╣ \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  ╠═══════════════	\n");
-	printf("Boulevard   "BG_ORANGE"║"RESET" \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  "BG_GREEN"║"RESET" avenue		\n");
-	printf("Saint-Michel"BG_ORANGE"║"RESET" \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  "BG_GREEN"║"RESET" Foch			\n");
-	printf("════════════╣ \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  ╠══════════════ 	\n");
-	printf("caisse de   ║ \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  ║ caisse de		\n");
-	printf("communauté  ║ \t\t       	 	◘ Achetez. Vendez. Négociez. Gagnez ! ◘		 						 	  ║ communauté	\n");
-	printf("════════════╣ \t\t\t       __       __   ______   __    __   ______   _______    ______   __    __      __             \t\t  ╠═══════════════	\n");    
-	printf("avenue      "BG_ORANGE"║"RESET" \t\t\t      /  \\     /  | /      \\ /  \\  /  | /      \\ /       \\  /      \\ /  |  /  \\    /  |     \t\t\t  "BG_GREEN"║"RESET" Boulevard		\n");
-	printf("Mozard      "BG_ORANGE"║"RESET" \t\t\t      $$  \\   /$$ |/$$$$$$  |$$  \\ $$ |/$$$$$$  |$$$$$$$  |/$$$$$$  |$$ |  $$  \\  /$$/          \t\t  "BG_GREEN"║"RESET" des capucines	\n");
-	printf("════════════╣ \t\t\t      $$$  \\ /$$$ |$$ |  $$ |$$$  \\$$ |$$ |  $$ |$$ |__$$ |$$ |  $$ |$$ |   $$  \\/$$/           \t\t  ╠═══════════════	\n");
-	printf("Gare de     ║ \t\t\t      $$$$  /$$$$ |$$ |  $$ |$$$$  $$ |$$ |  $$ |$$    $$/ $$ |  $$ |$$ |    $$  $$\\              \t\t  ║ gare 🚅	\n");
-	printf("Lyon 🚅     ║ \t\t\t      $$ $$ $$/$$ |$$ |  $$ |$$ $$ $$ |$$ |  $$ |$$$$$$$/  $$ |  $$ |$$ |     $$$$/                \t\t  ║ Saint-Lazare	\n");
-	printf("════════════╣ \t\t\t      $$ |$$$/ $$ |$$ \\__$$ |$$ |$$$$ |$$ \\__$$ |$$ |      $$ \\__$$ |$$ |_____ $$ |             \t\t  ╠═══════════════	\n"); 
-	printf("Rue de      "BG_BRIGHT_MAGENTA"║"RESET" \t\t\t      $$ | $/  $$ |$$    $$/ $$ | $$$ |$$    $$/ $$ |      $$    $$/ $$       |$$ |                \t\t  ║    chance		\n");
-	printf("Paradis     "BG_BRIGHT_MAGENTA"║"RESET" \t\t\t      $$/      $$/  $$$$$$/  $$/   $$/  $$$$$$/  $$/        $$$$$$/  $$$$$$$$/ $$/                 \t\t  ║	 🍀		\n");
-	printf("════════════╣ \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   \t\t  ╠═══════════════	\n");
-	printf("Avenue de   "BG_BRIGHT_MAGENTA"║"RESET" \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t   \t\t  "BG_BLUE"║"RESET" Avenue des	\n");
-	printf("Neuilly     "BG_BRIGHT_MAGENTA"║"RESET" \t\t\t  "DIM"     _                      _             _            _ _ _   _               _               "RESET"  \t\t  "BG_BLUE"║"RESET" champs-élysées\n");
-	printf("════════════╣ \t\t\t  "DIM"    | |_ ___ _ __ _ __ ___ (_)_ __   __ _| |   ___  __| (_) |_(_) ___  _ __   | |              "RESET"  \t\t  ╠═══════════════	\n");
-	printf("compagnie   ║ \t\t\t  "DIM"    | __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` | |  / _ \\/ _` | | __| |/ _ \\| '_ \\  | |        "RESET"  \t\t\t  ║ Taxe de   	\n");
-	printf("électrique  ║ \t\t\t  "DIM"    | ||  __/ |  | | | | | | | | | | (_| | | |  __/ (_| | | |_| | (_) | | | | |_|              "RESET"  \t\t  ║ Luxe 💍    	\n");
-	printf("════════════╣ \t\t\t  "DIM"     \\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|_|  \\___|\\__,_|_|\\__|_|\\___/|_| |_| (_)       "RESET"  \t\t\t  ╠═══════════════	\n");
-	printf("Boulevard de"BG_BRIGHT_MAGENTA"║"RESET" \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  "BG_BLUE"║"RESET" Rue de    	\n");
-	printf("la villette "BG_BRIGHT_MAGENTA"║"RESET" \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t  "BG_BLUE"║"RESET" la Paix   	\n");
-	printf("════════════╬"BG_BRIGHT_CYAN"══════════════"RESET"╦"BG_BRIGHT_CYAN"══════════════"RESET"╦══════════════╦"BG_BRIGHT_CYAN"══════════════"RESET"╦══════════════╦══════════════╦"BG_BROWN"════════════"RESET"╦══════════════╦"BG_BROWN"═══════════════"RESET"╬═══════════════ \n");
-	printf(" Simple     ║ Avenue de la ║  Rue de      ║    chance    ║ Rue de       ║ Gare  🚅     ║  Impôts sur  ║  Rue       ║  Caisse de   ║ Boulevard de  ║  Case         \n");
-	printf(" visite     ║ République   ║  Courcelles  ║      🍀      ║ Vaugirard    ║ Montparnasse ║  le revenue  ║  Lecourbe  ║  Communauté  ║ Belleville    ║  Départ       \n");
-	*/
+	printf(" Parc          ║   Avenue     ║    chance    ║  Boulevard   ║    Avenue    ║   Gare du    ║ Faubourg     ║  Place de   ║  Compagnie   ║   Rue la     ║  Allez en     \n");
+	printf("Gratuit        ║   Matignon   ║      🍀      ║  Malesherbes ║ Henri-Martin ║   Nord  🚅   ║ Saint-Honoré ║  la bourse  ║   des eaux   ║   fayette    ║  prison       \n");
+	printf("═══════════════╬"BG_RED"══════════════"RESET"╩══════════════╩"BG_RED"══════════════"RESET"╩"BG_RED"══════════════"RESET"╩══════════════╩"BG_YELLOW"══════════════"RESET"╩"BG_YELLOW"═════════════"RESET"╩══════════════╩"BG_YELLOW"══════════════"RESET"╬═══════════════   \n");
+	printf("place         %-4s"BG_ORANGE"║"RESET" \t\t\t                                                                                                   \t\t  "BG_GREEN"║"RESET" %-4s Avenue		\n",					check_house(board[19],1),check_house(board[31],0));
+	printf("Pigalle       %-4s"BG_ORANGE"║"RESET" \t\t\t                                                                                                   \t\t  "BG_GREEN"║"RESET" %-4s de breteuil	\n",					check_house(board[19],0),check_house(board[31],1));
+	printf("═══════════════╣ \t\t\t                                                                                                   \t\t  ╠═══════════════	\n");
+	printf("Boulevard     %-4s"BG_ORANGE"║"RESET" \t\t\t                                                                                                   \t\t  "BG_GREEN"║"RESET" %-4s avenue		\n",					check_house(board[18],1),check_house(board[32],0));
+	printf("Saint-Michel  %-4s"BG_ORANGE"║"RESET" \t\t\t                                                                                                   \t\t  "BG_GREEN"║"RESET" %-4s Foch			\n",					check_house(board[18],0),check_house(board[32],1));
+	printf("═══════════════╣ \t\t\t                                                                                                   \t\t  ╠══════════════ 	\n");
+	printf("caisse de      ║ \t\t\t                                                                                                   \t\t  ║ caisse de		\n");
+	printf("communauté     ║ \t\t       	 	◘ Achetez. Vendez. Négociez. Gagnez ! ◘		 						 	  ║ communauté	\n");
+	printf("═══════════════╣ \t\t\t       __       __   ______   __    __   ______   _______    ______   __    __      __             \t\t  ╠═══════════════	\n");    
+	printf("avenue        %-4s"BG_ORANGE"║"RESET" \t\t\t      /  \\     /  | /      \\ /  \\  /  | /      \\ /       \\  /      \\ /  |  /  \\    /  |     \t\t\t  "BG_GREEN"║"RESET" %-4s Boulevard		\n",				check_house(board[16],1),check_house(board[34],0));
+	printf("Mozard        %-4s"BG_ORANGE"║"RESET" \t\t\t      $$  \\   /$$ |/$$$$$$  |$$  \\ $$ |/$$$$$$  |$$$$$$$  |/$$$$$$  |$$ |  $$  \\  /$$/          \t\t  "BG_GREEN"║"RESET" %-4s des capucines	\n",				check_house(board[16],0),check_house(board[34],1));
+	printf("═══════════════╣ \t\t\t      $$$  \\ /$$$ |$$ |  $$ |$$$  \\$$ |$$ |  $$ |$$ |__$$ |$$ |  $$ |$$ |   $$  \\/$$/           \t\t  ╠═══════════════	\n");
+	printf("Gare de        ║ \t\t\t      $$$$  /$$$$ |$$ |  $$ |$$$$  $$ |$$ |  $$ |$$    $$/ $$ |  $$ |$$ |    $$  $$\\              \t\t  ║ gare 🚅	\n");
+	printf("Lyon 🚅       ║ \t\t\t      $$ $$ $$/$$ |$$ |  $$ |$$ $$ $$ |$$ |  $$ |$$$$$$$/  $$ |  $$ |$$ |     $$$$/                \t\t  ║ Saint-Lazare	\n");
+	printf("═══════════════╣ \t\t\t      $$ |$$$/ $$ |$$ \\__$$ |$$ |$$$$ |$$ \\__$$ |$$ |      $$ \\__$$ |$$ |_____ $$ |             \t\t  ╠═══════════════	\n"); 
+	printf("Rue de        %-4s"BG_BRIGHT_MAGENTA"║"RESET" \t\t\t      $$ | $/  $$ |$$    $$/ $$ | $$$ |$$    $$/ $$ |      $$    $$/ $$       |$$ |                \t\t  ║    chance		\n",								check_house(board[14],1));
+	printf("Paradis       %-4s"BG_BRIGHT_MAGENTA"║"RESET" \t\t\t      $$/      $$/  $$$$$$/  $$/   $$/  $$$$$$/  $$/        $$$$$$/  $$$$$$$$/ $$/                 \t\t  ║	 🍀		\n",									check_house(board[14],0));
+	printf("═══════════════╣ \t\t\t                                                                                                   \t\t  ╠═══════════════	\n");
+	printf("Avenue de     %-4s"BG_BRIGHT_MAGENTA"║"RESET" \t\t\t                                                                                                   \t\t  "BG_BLUE"║"RESET" %-4s Avenue des	\n",			check_house(board[13],1),check_house(board[37],0));
+	printf("Neuilly       %-4s"BG_BRIGHT_MAGENTA"║"RESET" \t\t\t  "DIM"     _                      _             _            _ _ _   _               _               "RESET"  \t\t  "BG_BLUE"║"RESET" %-4s champs-élysées\n",check_house(board[13],0),check_house(board[37],1));
+	printf("═══════════════╣ \t\t\t  "DIM"    | |_ ___ _ __ _ __ ___ (_)_ __   __ _| |   ___  __| (_) |_(_) ___  _ __   | |              "RESET"  \t\t  ╠═══════════════	\n");
+	printf("compagnie      ║ \t\t\t  "DIM"    | __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` | |  / _ \\/ _` | | __| |/ _ \\| '_ \\  | |        "RESET"  \t\t\t  ║ Taxe de   	\n");
+	printf("électrique     ║ \t\t\t  "DIM"    | ||  __/ |  | | | | | | | | | | (_| | | |  __/ (_| | | |_| | (_) | | | | |_|              "RESET"  \t\t  ║ Luxe 💍    	\n");
+	printf("═══════════════╣ \t\t\t  "DIM"     \\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|_|  \\___|\\__,_|_|\\__|_|\\___/|_| |_| (_)       "RESET"  \t\t\t  ╠═══════════════	\n");
+	printf("Boulevard de  %-4s"BG_BRIGHT_MAGENTA"║"RESET" \t\t\t                                                                                                   \t\t  "BG_BLUE"║"RESET" %-4s Rue de    	\n",			check_house(board[11],1),check_house(board[39],0));
+	printf("la villette   %-4s"BG_BRIGHT_MAGENTA"║"RESET" \t\t\t                                                                                                   \t\t  "BG_BLUE"║"RESET" %-4s la Paix   	\n",			check_house(board[11],0),check_house(board[39],1));
+	printf("═══════════════╬"BG_BRIGHT_CYAN"══════════════"RESET"╦"BG_BRIGHT_CYAN"══════════════"RESET"╦══════════════╦"BG_BRIGHT_CYAN"══════════════"RESET"╦══════════════╦══════════════╦"BG_BROWN"════════════"RESET"╦══════════════╦"BG_BROWN"═══════════════"RESET"╬═══════════════ \n");
+	printf(" Simple        ║ Avenue de la ║  Rue de      ║    chance    ║ Rue de       ║ Gare  🚅     ║  Impôts sur  ║  Rue       ║  Caisse de   ║ Boulevard de  ║  Case         \n");
+	printf(" visite        ║ République   ║  Courcelles  ║      🍀      ║ Vaugirard    ║ Montparnasse ║  le revenue  ║  Lecourbe  ║  Communauté  ║ Belleville    ║  Départ       \n");
 }
 
 void clear_terminal(void)
 {
 	system("cls");
 }
-/* OLD with " "
-void show_board(MonopolyCase **board)
-{
-	printf("            ║              ║              ║              ║              ║              ║              ║             ║ Compagnie de ║              ║               \n");
-	printf(" Parc       ║   Avenue     ║    chance    ║  Boulevard   ║    Avenue    ║   Gare du    ║ Faubourg     ║  Place de   ║ distribution ║   Rue la     ║  Allez en     \n");
-	printf("Gratuit     ║   Matignon   ║      🍀      ║  Malesherbes ║ Henri-Martin ║   Nord  🚅   ║ Saint-Honoré ║  la bourse  ║   des eaux   ║   fayette    ║  prison       \n");
-	printf("════════════╬"BG_RED"══════════════"RESET"╩══════════════╩"BG_RED"══════════════"RESET"╩"BG_RED"══════════════"RESET"╩══════════════╩"BG_YELLOW"══════════════"RESET"╩"BG_YELLOW"═════════════"RESET"╩══════════════╩"BG_YELLOW"══════════════"RESET"╬═══════════════   \n");
-	printf("place       "BG_ORANGE"║"RESET" \t\t\t                                                                                                   \t\t  "BG_GREEN"║"RESET" Avenue		\n");
-	printf("Pigalle     "BG_ORANGE"║"RESET" \t\t\t                                                                                                   \t\t  "BG_GREEN"║"RESET" de breteuil	\n");
-	printf("════════════╣ \t\t\t                                                                                                   \t\t  ╠═══════════════	\n");
-	printf("Boulevard   "BG_ORANGE"║"RESET" \t\t\t                                                                                                   \t\t  "BG_GREEN"║"RESET" avenue		\n");
-	printf("Saint-Michel"BG_ORANGE"║"RESET" \t\t\t                                                                                                   \t\t  "BG_GREEN"║"RESET" Foch			\n");
-	printf("════════════╣ \t\t\t                                                                                                   \t\t  ╠══════════════ 	\n");
-	printf("caisse de   ║ \t\t\t                                                                                                   \t\t  ║ caisse de		\n");
-	printf("communauté  ║ \t\t       	 	◘ Achetez. Vendez. Négociez. Gagnez ! ◘		 						 	  ║ communauté	\n");
-	printf("════════════╣ \t\t\t       __       __   ______   __    __   ______   _______    ______   __    __      __             \t\t  ╠═══════════════	\n");    
-	printf("avenue      "BG_ORANGE"║"RESET" \t\t\t      /  \\     /  | /      \\ /  \\  /  | /      \\ /       \\  /      \\ /  |  /  \\    /  |     \t\t\t  "BG_GREEN"║"RESET" Boulevard		\n");
-	printf("Mozard      "BG_ORANGE"║"RESET" \t\t\t      $$  \\   /$$ |/$$$$$$  |$$  \\ $$ |/$$$$$$  |$$$$$$$  |/$$$$$$  |$$ |  $$  \\  /$$/          \t\t  "BG_GREEN"║"RESET" des capucines	\n");
-	printf("════════════╣ \t\t\t      $$$  \\ /$$$ |$$ |  $$ |$$$  \\$$ |$$ |  $$ |$$ |__$$ |$$ |  $$ |$$ |   $$  \\/$$/           \t\t  ╠═══════════════	\n");
-	printf("Gare de     ║ \t\t\t      $$$$  /$$$$ |$$ |  $$ |$$$$  $$ |$$ |  $$ |$$    $$/ $$ |  $$ |$$ |    $$  $$\\              \t\t  ║ gare 🚅	\n");
-	printf("Lyon 🚅     ║ \t\t\t      $$ $$ $$/$$ |$$ |  $$ |$$ $$ $$ |$$ |  $$ |$$$$$$$/  $$ |  $$ |$$ |     $$$$/                \t\t  ║ Saint-Lazare	\n");
-	printf("════════════╣ \t\t\t      $$ |$$$/ $$ |$$ \\__$$ |$$ |$$$$ |$$ \\__$$ |$$ |      $$ \\__$$ |$$ |_____ $$ |             \t\t  ╠═══════════════	\n"); 
-	printf("Rue de      "BG_BRIGHT_MAGENTA"║"RESET" \t\t\t      $$ | $/  $$ |$$    $$/ $$ | $$$ |$$    $$/ $$ |      $$    $$/ $$       |$$ |                \t\t  ║    chance		\n");
-	printf("Paradis     "BG_BRIGHT_MAGENTA"║"RESET" \t\t\t      $$/      $$/  $$$$$$/  $$/   $$/  $$$$$$/  $$/        $$$$$$/  $$$$$$$$/ $$/                 \t\t  ║	 🍀		\n");
-	printf("════════════╣ \t\t\t                                                                                                   \t\t  ╠═══════════════	\n");
-	printf("Avenue de   "BG_BRIGHT_MAGENTA"║"RESET" \t\t\t                                                                                                   \t\t  "BG_BLUE"║"RESET" Avenue des	\n");
-	printf("Neuilly     "BG_BRIGHT_MAGENTA"║"RESET" \t\t\t  "DIM"     _                      _             _            _ _ _   _               _               "RESET"  \t\t  "BG_BLUE"║"RESET" champs-élysées\n");
-	printf("════════════╣ \t\t\t  "DIM"    | |_ ___ _ __ _ __ ___ (_)_ __   __ _| |   ___  __| (_) |_(_) ___  _ __   | |              "RESET"  \t\t  ╠═══════════════	\n");
-	printf("compagnie   ║ \t\t\t  "DIM"    | __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` | |  / _ \\/ _` | | __| |/ _ \\| '_ \\  | |        "RESET"  \t\t\t  ║ Taxe de   	\n");
-	printf("électrique  ║ \t\t\t  "DIM"    | ||  __/ |  | | | | | | | | | | (_| | | |  __/ (_| | | |_| | (_) | | | | |_|              "RESET"  \t\t  ║ Luxe 💍    	\n");
-	printf("════════════╣ \t\t\t  "DIM"     \\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|_|  \\___|\\__,_|_|\\__|_|\\___/|_| |_| (_)       "RESET"  \t\t\t  ╠═══════════════	\n");
-	printf("Boulevard de"BG_BRIGHT_MAGENTA"║"RESET" \t\t\t                                                                                                   \t\t  "BG_BLUE"║"RESET" Rue de    	\n");
-	printf("la villette "BG_BRIGHT_MAGENTA"║"RESET" \t\t\t                                                                                                   \t\t  "BG_BLUE"║"RESET" la Paix   	\n");
-	printf("════════════╬"BG_BRIGHT_CYAN"══════════════"RESET"╦"BG_BRIGHT_CYAN"══════════════"RESET"╦══════════════╦"BG_BRIGHT_CYAN"══════════════"RESET"╦══════════════╦══════════════╦"BG_BROWN"════════════"RESET"╦══════════════╦"BG_BROWN"═══════════════"RESET"╬═══════════════ \n");
-	printf(" Simple     ║ Avenue de la ║  Rue de      ║    chance    ║ Rue de       ║ Gare  🚅     ║  Impôts sur  ║  Rue       ║  Caisse de   ║ Boulevard de  ║  Case         \n");
-	printf(" visite     ║ République   ║  Courcelles  ║      🍀      ║ Vaugirard    ║ Montparnasse ║  le revenue  ║  Lecourbe  ║  Communauté  ║ Belleville    ║  Départ       \n");
-}
-*/
-
 
 void	show_rules(void)
 {
-    // Encadrement du titre des règles
-    printf(DIM BOLD "======================================================\n");
-    printf("=             ⭐️ RÈGLES DU MONOPOLY ⭐️             =\n");
-    printf("======================================================\n\n" RESET);
+	// Encadrement du titre des règles
+	printf(DIM BOLD "======================================================\n");
+	printf("=             ⭐️ RÈGLES DU MONOPOLY ⭐️             =\n");
+	printf("======================================================\n\n" RESET);
 
-    printf(BOLD UNDERLINE "1. OBJECTIF DU JEU\n" RESET);
-    printf("   L'objectif du Monopoly est de ruiner les autres joueurs en acquérant des propriétés,\n");
-    printf("   construisant des maisons et hôtels, et en leur faisant payer des loyers élevés.\n\n");
+	printf(BOLD UNDERLINE "1. OBJECTIF DU JEU\n" RESET);
+	printf("   L'objectif du Monopoly est de ruiner les autres joueurs en acquérant des propriétés,\n");
+	printf("   construisant des maisons et hôtels, et en leur faisant payer des loyers élevés.\n\n");
 
-    printf(BOLD UNDERLINE "2. CONFIGURATION DU JEU\n" RESET);
-    printf("   - Le jeu se joue de 2 à 8 joueurs.\n");
-    printf("   - Chaque joueur commence avec 1500 unités de monnaie.\n");
-    printf("   - Les joueurs choisissent une couleur et un pion. Les pions sont placés sur la case \"Départ\".\n\n");
+	printf(BOLD UNDERLINE "2. CONFIGURATION DU JEU\n" RESET);
+	printf("   - Le jeu se joue de 2 à 8 joueurs.\n");
+	printf("   - Chaque joueur commence avec 1500 unités de monnaie.\n");
+	printf("   - Les joueurs choisissent une couleur et un pion. Les pions sont placés sur la case \"Départ\".\n\n");
 
-    printf(BOLD UNDERLINE "3. DÉROULEMENT DU JEU\n" RESET);
-    printf("   - Les joueurs lancent les dés à tour de rôle pour avancer sur le plateau.\n");
-    printf("   - En fonction de la case sur laquelle ils atterrissent, ils peuvent :\n");
-    printf("     1. Acheter une propriété\n");
-    printf("     2. Payer un loyer\n");
-    printf("     3. Tirer une carte Chance ou Caisse de Communauté\n");
-    printf("     4. Payer des taxes\n");
-    printf("     5. Aller en prison\n\n");
+	printf(BOLD UNDERLINE "3. DÉROULEMENT DU JEU\n" RESET);
+	printf("   - Les joueurs lancent les dés à tour de rôle pour avancer sur le plateau.\n");
+	printf("   - En fonction de la case sur laquelle ils atterrissent, ils peuvent :\n");
+	printf("     1. Acheter une propriété\n");
+	printf("     2. Payer un loyer\n");
+	printf("     3. Tirer une carte Chance ou Caisse de Communauté\n");
+	printf("     4. Payer des taxes\n");
+	printf("     5. Aller en prison\n\n");
 
-    printf(BOLD UNDERLINE "4. LANCER DES DÉS\n" RESET);
-    printf("	- Lors de leur tour, les joueurs lancent deux dés.\n");
-    printf("	- Si un joueur fait un double, il joue à nouveau. Trois doubles consécutifs\n");
-    printf("     envoient le joueur directement en prison.\n\n");
+	printf(BOLD UNDERLINE "4. LANCER DES DÉS\n" RESET);
+	printf("	- Lors de leur tour, les joueurs lancent deux dés.\n");
+	printf("	- Si un joueur fait un double, il joue à nouveau. Trois doubles consécutifs\n");
+	printf("     envoient le joueur directement en prison.\n\n");
 
-    printf(BOLD UNDERLINE "5. PROPRIÉTÉS\n" RESET);
-    printf("	- Lorsqu'un joueur atterrit sur une propriété non possédée, il peut l'acheter.\n");
-    printf("	- Si le joueur choisit de ne pas acheter, la propriété est mise aux enchères.\n");
-    printf("	- Les propriétés peuvent être hypothéquées pour lever des fonds.\n\n");
+	printf(BOLD UNDERLINE "5. PROPRIÉTÉS\n" RESET);
+	printf("	- Lorsqu'un joueur atterrit sur une propriété non possédée, il peut l'acheter.\n");
+	printf("	- Si le joueur choisit de ne pas acheter, la propriété est mise aux enchères.\n");
+	printf("	- Les propriétés peuvent être hypothéquées pour lever des fonds.\n\n");
 
-    printf(BOLD UNDERLINE "6. LOYERS\n" RESET);
-    printf("	- Les loyers sont payés lorsque des joueurs atterrissent sur des propriétés.\n");
-    printf("	- Les loyers varient en fonction du nombre de maisons ou d'hôtels sur la propriété.\n");
-    printf("	- Les loyers sont doublés si le propriétaire possède tous les terrains d'une même couleur.\n\n");
+	printf(BOLD UNDERLINE "6. LOYERS\n" RESET);
+	printf("	- Les loyers sont payés lorsque des joueurs atterrissent sur des propriétés.\n");
+	printf("	- Les loyers varient en fonction du nombre de maisons ou d'hôtels sur la propriété.\n");
+	printf("	- Les loyers sont doublés si le propriétaire possède tous les terrains d'une même couleur.\n\n");
 
-    printf(BOLD UNDERLINE "7. MAISONS ET HÔTELS\n" RESET);
-    printf("	- Un joueur peut construire des maisons sur ses propriétés lorsqu'il possède\n");
-    printf("     tous les terrains d'une couleur.\n");
-    printf("	- Les maisons doivent être construites uniformément : on ne peut pas construire\n");
-    printf("     une deuxième maison sur une propriété avant que chaque propriété de l'ensemble\n");
-    printf("     n'ait une maison.\n");
-    printf("	- Une fois que le joueur a quatre maisons sur une propriété, il peut construire un hôtel.\n\n");
+	printf(BOLD UNDERLINE "7. MAISONS ET HÔTELS\n" RESET);
+	printf("	- Un joueur peut construire des maisons sur ses propriétés lorsqu'il possède\n");
+	printf("     tous les terrains d'une couleur.\n");
+	printf("	- Les maisons doivent être construites uniformément : on ne peut pas construire\n");
+	printf("     une deuxième maison sur une propriété avant que chaque propriété de l'ensemble\n");
+	printf("     n'ait une maison.\n");
+	printf("	- Une fois que le joueur a quatre maisons sur une propriété, il peut construire un hôtel.\n\n");
 
-    printf(BOLD UNDERLINE "8. CARDS CHANCE ET CAISSE DE COMMUNAUTÉ\n" RESET);
-    printf("	- Les cartes Chance et Caisse de Communauté contiennent des instructions variées :\n");
-    printf("	- Gagner de l'argent\n");
-    printf("	- Payer une amende\n");
-    printf("	- Se déplacer sur le plateau\n");
-    printf("	- Un joueur doit suivre les instructions de la carte tirée.\n\n");
+	printf(BOLD UNDERLINE "8. CARDS CHANCE ET CAISSE DE COMMUNAUTÉ\n" RESET);
+	printf("	- Les cartes Chance et Caisse de Communauté contiennent des instructions variées :\n");
+	printf("	- Gagner de l'argent\n");
+	printf("	- Payer une amende\n");
+	printf("	- Se déplacer sur le plateau\n");
+	printf("	- Un joueur doit suivre les instructions de la carte tirée.\n\n");
 
-    printf(BOLD UNDERLINE "9. IMPÔTS ET TAXES\n" RESET);
-    printf("	- Les joueurs doivent payer des taxes lorsqu'ils atterrissent sur certaines cases.\n");
-    printf("	- Impôt sur le revenu : 200 unités de monnaie\n");
-    printf("	- Taxe de luxe : 75 unités de monnaie\n");
-    printf("	- Les taxes doivent être payées immédiatement.\n\n");
+	printf(BOLD UNDERLINE "9. IMPÔTS ET TAXES\n" RESET);
+	printf("	- Les joueurs doivent payer des taxes lorsqu'ils atterrissent sur certaines cases.\n");
+	printf("	- Impôt sur le revenu : 200 unités de monnaie\n");
+	printf("	- Taxe de luxe : 75 unités de monnaie\n");
+	printf("	- Les taxes doivent être payées immédiatement.\n\n");
 
-    printf(BOLD UNDERLINE "10. PRISON\n" RESET);
-    printf("	- Un joueur peut être envoyé en prison de plusieurs manières :\n");
-    printf("     	1. En tombant sur la case \"Allez en Prison\".\n");
-    printf("     	2. En tirant une carte indiquant de se rendre en prison.\n");
-    printf("	- Pour sortir de prison, un joueur peut :\n");
-    printf("	- Payer une amende de 50 unités de monnaie.\n");
-    printf("	- Utiliser une carte «Sortie de Prison». \n");
-    printf("	- Lancer un double (dans ce cas, il avance du montant du double et joue à nouveau).\n");
-    printf("	- Si le joueur n'a pas obtenu de double après trois lancers, il doit payer l'amende et sortir.\n\n");
+	printf(BOLD UNDERLINE "10. PRISON\n" RESET);
+	printf("	- Un joueur peut être envoyé en prison de plusieurs manières :\n");
+	printf("     	1. En tombant sur la case \"Allez en Prison\".\n");
+	printf("     	2. En tirant une carte indiquant de se rendre en prison.\n");
+	printf("	- Pour sortir de prison, un joueur peut :\n");
+	printf("	- Payer une amende de 50 unités de monnaie.\n");
+	printf("	- Utiliser une carte «Sortie de Prison». \n");
+	printf("	- Lancer un double (dans ce cas, il avance du montant du double et joue à nouveau).\n");
+	printf("	- Si le joueur n'a pas obtenu de double après trois lancers, il doit payer l'amende et sortir.\n\n");
 
-    printf(BOLD UNDERLINE "11. FAILLITE\n" RESET);
-    printf("	- Si un joueur ne peut pas payer une dette, il doit vendre des propriétés ou\n");
-    printf("     hypothéquer des terrains pour obtenir des fonds.\n");
-    printf("	- Un joueur est déclaré en faillite s'il doit de l'argent à un autre joueur et\n");
-    printf("     n'a pas de fonds disponibles. Il doit alors donner toutes ses propriétés et\n");
-    printf("     son argent au créancier.\n\n");
+	printf(BOLD UNDERLINE "11. FAILLITE\n" RESET);
+	printf("	- Si un joueur ne peut pas payer une dette, il doit vendre des propriétés ou\n");
+	printf("     hypothéquer des terrains pour obtenir des fonds.\n");
+	printf("	- Un joueur est déclaré en faillite s'il doit de l'argent à un autre joueur et\n");
+	printf("     n'a pas de fonds disponibles. Il doit alors donner toutes ses propriétés et\n");
+	printf("     son argent au créancier.\n\n");
 
-    printf(BOLD UNDERLINE "12. FIN DU JEU\n" RESET);
-    printf("	- Le jeu se termine lorsqu'un joueur a fait faillite et qu'il ne reste qu'un joueur.\n");
-    printf("	- Ce joueur est déclaré vainqueur et remporte la partie.\n\n");
+	printf(BOLD UNDERLINE "12. FIN DU JEU\n" RESET);
+	printf("	- Le jeu se termine lorsqu'un joueur a fait faillite et qu'il ne reste qu'un joueur.\n");
+	printf("	- Ce joueur est déclaré vainqueur et remporte la partie.\n\n");
 
-    printf(DIM BOLD "======================================================\n");
-    printf("=         Merci d'avoir consulté les règles!         =\n");
-    printf("======================================================\n\n" RESET);
+	printf(DIM BOLD "======================================================\n");
+	printf("=         Merci d'avoir consulté les règles!         =\n");
+	printf("======================================================\n\n" RESET);
 }
