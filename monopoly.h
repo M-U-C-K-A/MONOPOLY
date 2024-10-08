@@ -22,10 +22,11 @@
 #define BLINK       "\033[5m"
 #define RED         "\033[31m"
 #define GREEN       "\033[32m"
-#define YELLOW      "\033[33m"
+#define YELLOW      "\033[38;2;250;204;21m"
 #define BLUE        "\033[34m"
 #define MAGENTA     "\033[35m"
-#define CYAN        "\033[36m"
+#define PINK        "\033[38;2;255;105;180m"
+#define CYAN        "\033[38;2;6;182;212m"
 #define WHITE       "\033[37m"
 #define BRIGHT_RED    "\033[91m"
 #define BRIGHT_GREEN  "\033[92m"
@@ -36,22 +37,18 @@
 #define BRIGHT_WHITE  "\033[97m"
 #define BG_RED          "\033[41m"
 #define BG_GREEN        "\033[42m"
-#define BG_YELLOW       "\033[43m"
+#define BG_YELLOW       "\033[48;2;250;204;21m"
 #define BG_BLUE         "\033[44m"
 #define BG_MAGENTA      "\033[45m"
 #define BG_CYAN         "\033[46m"
 #define BG_WHITE        "\033[47m"
-#define BG_BRIGHT_RED     "\033[101m"
-#define BG_BRIGHT_GREEN   "\033[102m"
-#define BG_BRIGHT_YELLOW  "\033[103m"
 #define BG_BRIGHT_BLUE    "\033[104m"
 #define BG_BRIGHT_MAGENTA "\033[105m"
 #define BG_BRIGHT_CYAN    "\033[106m"
-#define BG_BRIGHT_WHITE   "\033[107m"
-#define ORANGE           "\033[38;5;208m"   // Orange text
-#define BROWN            "\033[38;5;130m"   // Brown text
-#define BG_ORANGE        "\033[48;5;208m"   // Orange background
-#define BG_BROWN         "\033[48;5;130m"   // Brown background
+#define ORANGE           "\033[38;2;249;115;22m"   // Orange text
+#define BROWN            "\033[38;2;76;43;32m"   // Brown text
+#define BG_ORANGE        "\033[48;2;249;115;22m"   // Orange background
+#define BG_BROWN         "\033[48;2;76;43;32m"   // Brown background
 #define BEIGE               "\033[38;5;230m"  // Beige text
 #define BG_BEIGE            "\033[48;5;230m"  // Beige background
 #define LIGHT_GRAY          "\033[38;5;250m"  // Light gray text

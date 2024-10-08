@@ -22,7 +22,7 @@ Player create_player(int player_number) {
 	scanf("%s", player.name);
 	
 	// Sélection de la couleur du joueur
-	printf("Choisissez une couleur pour %s: (1) Rouge, (2) Vert, (3) Bleu, (4) Jaune, (5) Magenta, (6) Cyan\n", player.name);
+	printf("Choisissez une couleur pour %s: "RED"(1) Rouge,"GREEN" (2) Vert,"BLUE" (3) Bleu,"YELLOW" (4) Jaune,"MAGENTA" (5) Magenta,"CYAN" (6) Cyan\n"RESET, player.name);
 	int color_choice;
 	scanf("%d", &color_choice);
 	
@@ -64,22 +64,22 @@ void player_card(Player *players, int player_count)
 {
 
 	char *words[] = {
-		"Départ", 
+		"Depart", 
 		"Boulevard de Belleville", 
-		"Caisse de Communauté (1)", 
-		"Impôts sur le revenue", 
+		"Caisse de Communaute (1)", 
+		"Impots sur le revenue", 
 		"Gare Montparnasse", 
 		"Chance (1)", 
 		"Rue de Courcelles", 
-		"Avenue de la République", 
+		"Avenue de la Republique", 
 		"Simple visite / prison", 
 		"Boulevard de la vilette",
-		"Compagnie électrique",
+		"Compagnie electrique",
 		"Avenue de Neuilly",
 		"Rue de Paradis",
 		"Gare de Lyon",
 		"Avenue Mozard",
-		"Caisse de Communauté (2)",
+		"Caisse de Communaute (2)",
 		"Boulevard Saint-Michel",
 		"Place Pigalle",
 		"Parc Gratuit",
@@ -88,14 +88,14 @@ void player_card(Player *players, int player_count)
 		"Boulevard Malesherbes",
 		"Avenue Henri-Martin",
 		"Gare du Nord",
-		"Faubourg Saint-Honoré",
+		"Faubourg Saint-Honore",
 		"Place de la Bourse",
 		"Compagnie des eaux",
 		"Rue la Fayette",
 		"Allez en prison",
 		"Avenue de Breteuil",
 		"Avenue Foch",
-		"Caisse de Communauté (3)",
+		"Caisse de Communaute (3)",
 		"Boulevard des Capucines",
 		"Gare Saint-Lazare",
 		"Chance (3)",
@@ -112,15 +112,16 @@ void player_card(Player *players, int player_count)
 		int money = p->money;
 		int position = p->position;
 		int in_jail = p->in_jail;
-		char position_str[26];
-		strncpy(position_str, words[position], 25);
+		char position_str[27];
+		strncpy(position_str, words[position], 27);
 
 		printf(color);
-		printf(DIM"╔═════════════════════════════════════════════╗\n");
-		printf("║"RESET"%s  %-12s              %s%s"           DIM "║\n",
+		printf("\n");
+		printf( DIM "╔════════════════════════════════════════════════╗\n");
+		printf("║"RESET"%s  %-12s              %s%s" DIM "   ║\n",
 		       color, name, in_jail ? RED"PLAYER IN JAIL ! " : "                 ",color);
-		printf("║"RESET"%s  $%-10d  case:%-25s "DIM"║\n", color, money, position_str);
-		printf("╚═════════════════════════════════════════════╝\n");
+		printf("║"RESET"%s  $%-10d  case:%-27s "DIM"║\n", color, money, position_str);
+		printf("╚════════════════════════════════════════════════╝\n");
 		printf(RESET);
 	}
 }
