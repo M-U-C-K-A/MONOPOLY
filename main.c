@@ -53,7 +53,7 @@ int roll_dice()
 void display_menu() {
 	printf("\nMenu:\n");
 	printf("1. Lancer les dés\n");
-	printf("2. Voir une carte\n");
+	printf("2. Voir les cartes\n");
 	printf("3. Paramètres\n");
 	printf("4. Règles\n");
 	printf("5. Quitter le jeu\n");
@@ -63,33 +63,45 @@ void display_menu() {
 void player_card(Player *players, int player_count)
 {
 
-	char *words[] = {"Départ", 
-	"Boulevard de Belleville", 
-	"Caisse de Communauté (1)", 
-	"Impôts sur le revenue", 
-	"Gare Montparnasse", 
-	"Chance (1)", 
-	"Rue de Courcelles", 
-	"Avenue de la République", 
-	"Simple visite / prison", 
-	"Boulevard de la vilette",
-	"Compagnie électrique",
-	"Avenue de Neuilly",
-	"Rue de Paradis",
-	"Gare de Lyon",
-	"Avenue Mozard",
-	"Caisse de Communauté (2)",
-	"Boulevard Saint-Michel",
-	"Place Pigalle",
-	"Parc Gratuit",
-	"Avenue Matignon",
-	"Chance (2)",
-	"Boulevard Malesherbes",
-	"Avenue Henri-Martin",
-	"Gare du Nord",
-	"Faubourg Saint-Honoré",
-	"Place de la Bourse",
-	"Compagnie des eaux",
+	char *words[] = {
+		"Départ", 
+		"Boulevard de Belleville", 
+		"Caisse de Communauté (1)", 
+		"Impôts sur le revenue", 
+		"Gare Montparnasse", 
+		"Chance (1)", 
+		"Rue de Courcelles", 
+		"Avenue de la République", 
+		"Simple visite / prison", 
+		"Boulevard de la vilette",
+		"Compagnie électrique",
+		"Avenue de Neuilly",
+		"Rue de Paradis",
+		"Gare de Lyon",
+		"Avenue Mozard",
+		"Caisse de Communauté (2)",
+		"Boulevard Saint-Michel",
+		"Place Pigalle",
+		"Parc Gratuit",
+		"Avenue Matignon",
+		"Chance (2)",
+		"Boulevard Malesherbes",
+		"Avenue Henri-Martin",
+		"Gare du Nord",
+		"Faubourg Saint-Honoré",
+		"Place de la Bourse",
+		"Compagnie des eaux",
+		"Rue la Fayette",
+		"Allez en prison",
+		"Avenue de Breteuil",
+		"Avenue Foch",
+		"Caisse de Communauté (3)",
+		"Boulevard des Capucines",
+		"Gare Saint-Lazare",
+		"Chance (3)",
+		"Avenue des Champs-Elysees",
+		"Taxe de Luxe",
+		"Rue de la Paix"
 	};
 	for (int i = 0; i < player_count; i++) {
 		Player *p = &players[i];
@@ -100,19 +112,22 @@ void player_card(Player *players, int player_count)
 		int money = p->money;
 		int position = p->position;
 		int in_jail = p->in_jail;
+		char position_str[26];
+		strncpy(position_str, words[position], 25);
 
 		printf(color);
-		printf(DIM"╔══════════════════════════════╗\n");
-		printf("║"RESET"%s  %-10s %s" DIM "║\n",
-		       color, name, in_jail ? RED"PLAYER IN JAIL ! " : "                 ");
-		printf("║"RESET"%s  $%-10d  case:%-8d  "DIM"║\n", color, money, position);
-		printf("╚══════════════════════════════╝\n");
+		printf(DIM"╔═════════════════════════════════════════════╗\n");
+		printf("║"RESET"%s  %-12s              %s%s"           DIM "║\n",
+		       color, name, in_jail ? RED"PLAYER IN JAIL ! " : "                 ",color);
+		printf("║"RESET"%s  $%-10d  case:%-25s "DIM"║\n", color, money, position_str);
+		printf("╚═════════════════════════════════════════════╝\n");
 		printf(RESET);
 	}
 }
 
 
-int main(void) {
+int main(void)
+{
 	SetConsoleOutputCP(CP_UTF8);
 	srand(time(NULL)); // Initialisation du générateur de nombres aléatoires
 
@@ -158,14 +173,36 @@ int main(void) {
 			}
 
 			case 2: {
-				// Voir une carte
-				int card_index;
-				printf("Quelle carte souhaitez-vous voir ? (0-39) ");
-				scanf("%d", &card_index);
-				show_card(board, card_index);
+				// Voir une carte ou une zone
+				int card_choice;
+				printf("1. Voir une carte\n2. Voir une zone\nchoix (1-2): ");
+				scanf("%d", &card_choice);
+				if (card_choice == 1) {
+					// Voir une carte
+					int card_index;
+					printf("Quelle carte souhaitez-vous voir ? (0-39) ");
+					scanf("%d", &card_index);
+					show_card(board, card_index);
+				} else if (card_choice == 2) {
+					// Voir une zone
+					int zone_index;
+					clear_terminal();
+					printf(BOLD UNDERLINE"Quelle zone souhaitez-vous voir ? (0-9)\n"RESET);
+					printf(BROWN"0 = Marron\n");
+					printf(BRIGHT_CYAN"1 = bleu ciel\n");
+					printf(MAGENTA"2 = rose\n");
+					printf(ORANGE"3 = orange\n");
+					printf(RED"4 = rouge\n");
+					printf(YELLOW"5 = jaune\n");
+					printf(GREEN"6 = vert\n");
+					printf(BLUE"7 = bleu foncé\n");
+					printf(BEIGE"8 = compagnies\n");
+					printf(LIGHT_GRAY"9 = gares\n"RESET);
+					scanf("%d", &zone_index);
+					show_color_card(board, zone_index);
+				}
 				break;
 			}
-
 			case 3: {
 				// Paramètres
 				printf("Modifier les paramètres:\n");

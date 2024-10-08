@@ -52,6 +52,10 @@
 #define BROWN            "\033[38;5;130m"   // Brown text
 #define BG_ORANGE        "\033[48;5;208m"   // Orange background
 #define BG_BROWN         "\033[48;5;130m"   // Brown background
+#define BEIGE               "\033[38;5;230m"  // Beige text
+#define BG_BEIGE            "\033[48;5;230m"  // Beige background
+#define LIGHT_GRAY          "\033[38;5;250m"  // Light gray text
+#define BG_LIGHT_GRAY       "\033[48;5;250m"  // Light gray background
 
 // Structure pour chaque case du Monopoly
 typedef struct MonopolyCase {
@@ -80,3 +84,4 @@ void                format_price(int price, char *output);
 char*               house(MonopolyCase *property);
 void                show_rules(void);
 const char*         check_house(MonopolyCase* case_ptr, int line);
+void				show_color_card(MonopolyCase **board, int index);
