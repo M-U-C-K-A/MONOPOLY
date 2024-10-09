@@ -7,33 +7,37 @@
 
 #include "monopoly.h"
 
-typedef struct Player {
-	char name[50];
-	char color[10]; // Couleur ANSI choisie
-	int money;
-	int position; // Position sur le plateau (0-39)
-	int in_jail;
-} Player;
 
-// Fonction pour initialiser un joueur
-Player create_player(int player_number) {
+
+/**
+ * Crée un joueur avec un nom et une couleur.
+ *
+ * Demande le nom et la couleur du joueur en entrée.
+ * Le joueur commence avec 1500 euros et est placé sur la case "Départ".
+ * Le joueur n'est pas en prison.
+ *
+ * @param player_number Numéro du joueur (1, 2, 3, ...)
+ * @return Joueur créé
+ */
+Player create_player(int player_number)
+{
 	Player player;
 	printf("Nom du joueur %d: ", player_number + 1);
 	scanf("%s", player.name);
 	
-	// Sélection de la couleur du joueur
-	printf("Choisissez une couleur pour %s: "RED"(1) Rouge,"GREEN" (2) Vert,"BLUE" (3) Bleu,"YELLOW" (4) Jaune,"MAGENTA" (5) Magenta,"CYAN" (6) Cyan\n"RESET, player.name);
+	printf("Choisissez une couleur pour %s: ", player.name);
+	printf(RED"(1) Rouge,"GREEN" (2) Vert,"BLUE" (3) Bleu,"YELLOW" (4) Jaune,"MAGENTA" (5) Magenta,"CYAN" (6) Cyan\n"RESET);
 	int color_choice;
 	scanf("%d", &color_choice);
 	
 	switch(color_choice) {
-		case 1: strcpy(player.color, RED); break;
-		case 2: strcpy(player.color, GREEN); break;
-		case 3: strcpy(player.color, BLUE); break;
-		case 4: strcpy(player.color, YELLOW); break;
-		case 5: strcpy(player.color, MAGENTA); break;
-		case 6: strcpy(player.color, CYAN); break;
-		default: strcpy(player.color, WHITE); break; // Blanc par défaut
+		case 1: strcpy(player.color, RED); break;		// if case 1 is chosen, it will be Red
+		case 2: strcpy(player.color, GREEN); break;		// if case 2 is chosen, it will be Green
+		case 3: strcpy(player.color, BLUE); break;		// if case 3 is chosen, it will be Blue
+		case 4: strcpy(player.color, YELLOW); break;	// if case 4 is chosen, it will be Yellow
+		case 5: strcpy(player.color, MAGENTA); break;	// if case 5 is chosen, it will be Magenta
+		case 6: strcpy(player.color, CYAN); break;		// if case 6 is chosen, it will be Cyan
+		default: strcpy(player.color, WHITE); break; 	// by default, it will be White
 	}
 
 	player.money = 1500; // Montant de départ
@@ -43,27 +47,12 @@ Player create_player(int player_number) {
 	return player;
 }
 
-// Fonction pour lancer les dés
-int roll_dice()
-{
-	return (rand() % 6 + 1) + (rand() % 6 + 1); // Somme de 2 dés (1-6)
-}
 
-// Fonction pour afficher le menu principal
-void display_menu() {
-	printf("\nMenu:\n");
-	printf("1. Lancer les dés\n");
-	printf("2. Voir les cartes\n");
-	printf("3. Paramètres\n");
-	printf("4. Règles\n");
-	printf("5. Quitter le jeu\n");
-	printf("Choisissez une option: ");
-}
+
 
 void player_card(Player *players, int player_count)
 {
-
-	char *words[] = {
+	char *places[] = {
 		"Depart", 
 		"Boulevard de Belleville", 
 		"Caisse de Communaute (1)", 
@@ -113,7 +102,7 @@ void player_card(Player *players, int player_count)
 		int position = p->position;
 		int in_jail = p->in_jail;
 		char position_str[27];
-		strncpy(position_str, words[position], 27);
+		strncpy(position_str, places[position], 27);
 
 		printf(color);
 		printf("\n");
