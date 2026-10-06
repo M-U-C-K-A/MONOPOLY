@@ -17,7 +17,7 @@
  */
 void show_card(MonopolyCase **board, int index)
 {
-	if (board[index] != NULL)
+	if (index >= 0 && index < 40 && board[index] != NULL)
 	{
 		char formatted_name[25];
 		char formatted_price[25];
@@ -61,7 +61,7 @@ void show_card(MonopolyCase **board, int index)
  */
 void show_color_card(MonopolyCase **board, int index)
 {
-	if (board[index] != NULL)
+	if (index >= 0 && index <= 9 && board[index] != NULL)
 	{
 		int card_list[][4] = {
 			{1, 3},
@@ -106,11 +106,11 @@ void show_color_card(MonopolyCase **board, int index)
 			printf("╠══════════════════════════╣\t╠══════════════════════════╣\t╠══════════════════════════╣\n");
 			printf("║" RESET BRIGHT_CYAN"           $%-13d " DIM "║\t║" RESET BRIGHT_CYAN"           $%-13d " DIM "║\t║" RESET BRIGHT_CYAN"           $%-13d " DIM "║\n", 						board[card_list[1][0]]->price, 			board[card_list[1][1]]->price,			board[card_list[1][2]]->price);
 			printf("║" RESET BRIGHT_CYAN" Rent: . . . . . . $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent: . . . . . . $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent: . . . . . . $%-5d " DIM "║\n",	board[card_list[1][0]]->rent, 			board[card_list[1][1]]->rent,			board[card_list[1][2]]->rent);
-			printf("║" RESET BRIGHT_CYAN" Rent with 🏠 x1:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent with 🏠 x1:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent: . . . . . . $%-5d " DIM "║\n", 	board[card_list[1][0]]->rent_1_house, 	board[card_list[1][1]]->rent_1_house,	board[card_list[1][2]]->rent_1_house);
-			printf("║" RESET BRIGHT_CYAN" Rent with 🏠 x2:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent with 🏠 x2:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent: . . . . . . $%-5d " DIM "║\n", 	board[card_list[1][0]]->rent_2_houses, 	board[card_list[1][1]]->rent_2_houses,	board[card_list[1][2]]->rent_2_houses);
-			printf("║" RESET BRIGHT_CYAN" Rent with 🏠 x3:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent with 🏠 x3:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent: . . . . . . $%-5d " DIM "║\n", 	board[card_list[1][0]]->rent_3_houses, 	board[card_list[1][1]]->rent_3_houses,	board[card_list[1][2]]->rent_3_houses);
-			printf("║" RESET BRIGHT_CYAN" Rent with 🏠 x4:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent with 🏠 x4:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent: . . . . . . $%-5d " DIM "║\n", 	board[card_list[1][0]]->rent_4_houses, 	board[card_list[1][1]]->rent_4_houses,	board[card_list[1][2]]->rent_4_houses);
-			printf("║" RESET BRIGHT_CYAN" Rent with 🏨   :  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent with 🏨   :  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent: . . . . . . $%-5d " DIM "║\n", 	board[card_list[1][0]]->rent_hotel, 	board[card_list[1][1]]->rent_hotel,		board[card_list[1][2]]->rent_hotel);
+			printf("║" RESET BRIGHT_CYAN" Rent with 🏠 x1:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent with 🏠 x1:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent with 🏠 x1:  $%-5d " DIM "║\n", 	board[card_list[1][0]]->rent_1_house, 	board[card_list[1][1]]->rent_1_house,	board[card_list[1][2]]->rent_1_house);
+			printf("║" RESET BRIGHT_CYAN" Rent with 🏠 x2:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent with 🏠 x2:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent with 🏠 x2:  $%-5d " DIM "║\n", 	board[card_list[1][0]]->rent_2_houses, 	board[card_list[1][1]]->rent_2_houses,	board[card_list[1][2]]->rent_2_houses);
+			printf("║" RESET BRIGHT_CYAN" Rent with 🏠 x3:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent with 🏠 x3:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent with 🏠 x3:  $%-5d " DIM "║\n", 	board[card_list[1][0]]->rent_3_houses, 	board[card_list[1][1]]->rent_3_houses,	board[card_list[1][2]]->rent_3_houses);
+			printf("║" RESET BRIGHT_CYAN" Rent with 🏠 x4:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent with 🏠 x4:  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent with 🏠 x4:  $%-5d " DIM "║\n", 	board[card_list[1][0]]->rent_4_houses, 	board[card_list[1][1]]->rent_4_houses,	board[card_list[1][2]]->rent_4_houses);
+			printf("║" RESET BRIGHT_CYAN" Rent with 🏨   :  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent with 🏨   :  $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Rent with 🏨   :  $%-5d " DIM "║\n", 	board[card_list[1][0]]->rent_hotel, 	board[card_list[1][1]]->rent_hotel,		board[card_list[1][2]]->rent_hotel);
 			printf("╠══════════════════════════╣\t╠══════════════════════════╣\t╠══════════════════════════╣\n");
 			printf("║" RESET BRIGHT_CYAN" House price:      $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" House price:      $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" House price:      $%-5d " DIM "║\n", 	board[card_list[1][0]]->house_price, 	board[card_list[1][1]]->house_price,	board[card_list[1][2]]->house_price);
 			printf("║" RESET BRIGHT_CYAN" Hotel price:🏠x4+ $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Hotel price:🏠x4+ $%-5d " DIM "║\t║" RESET BRIGHT_CYAN" Hotel price:🏠x4+ $%-5d " DIM "║\n", 	board[card_list[1][0]]->house_price, 	board[card_list[1][1]]->house_price,	board[card_list[1][2]]->house_price);
@@ -118,7 +118,7 @@ void show_color_card(MonopolyCase **board, int index)
 			break;
 		case 2:// Magenta Property
 		    printf(MAGENTA DIM "╔══════════════════════════╗\n");
-		    printf("║" RESET MAGENTA BOLD "  Magenta Property          " DIM "║\n");
+		    printf("║" RESET MAGENTA BOLD "  Magenta Property        " DIM "║\n");
 		    printf("╚══════════════════════════╝\n\n" RESET MAGENTA);
 
 		    printf(DIM "╔══════════════════════════╗\t╔══════════════════════════╗\t╔══════════════════════════╗\n");
@@ -158,7 +158,7 @@ void show_color_card(MonopolyCase **board, int index)
 			break;
 		case 4:// Red Property
 		    printf(RED DIM "╔══════════════════════════╗\n");
-		    printf("║" RESET RED BOLD "  Red Property         " DIM "║\n");
+		    printf("║" RESET RED BOLD "  Red Property            " DIM "║\n");
 		    printf("╚══════════════════════════╝\n\n" RESET RED);
 		
 		    printf(DIM "╔══════════════════════════╗\t╔══════════════════════════╗\t╔══════════════════════════╗\n");
@@ -166,14 +166,14 @@ void show_color_card(MonopolyCase **board, int index)
 		    printf("╠══════════════════════════╣\t╠══════════════════════════╣\t╠══════════════════════════╣\n");
 		    printf("║" RESET RED"           $%-13d " DIM "║\t║" RESET RED"           $%-13d " DIM "║\t║" RESET RED"           $%-13d " DIM "║\n", board[card_list[4][0]]->price, board[card_list[4][1]]->price, board[card_list[4][2]]->price);
 		    printf("║" RESET RED" Rent: . . . . . . $%-5d " DIM "║\t║" RESET RED" Rent: . . . . . . $%-5d " DIM "║\t║" RESET RED" Rent: . . . . . . $%-5d " DIM "║\n", board[card_list[4][0]]->rent, board[card_list[4][1]]->rent, board[card_list[4][2]]->rent);
-		    printf("║" RESET RED" Rent with x1:  $%-5d " DIM "║\t║" RESET RED" Rent with x1:  $%-5d " DIM "║\t║" RESET RED" Rent with x1:  $%-5d " DIM "║\n", board[card_list[4][0]]->rent_1_house, board[card_list[4][1]]->rent_1_house, board[card_list[4][2]]->rent_1_house);
-		    printf("║" RESET RED" Rent with x2:  $%-5d " DIM "║\t║" RESET RED" Rent with x2:  $%-5d " DIM "║\t║" RESET RED" Rent with x2:  $%-5d " DIM "║\n", board[card_list[4][0]]->rent_2_houses, board[card_list[4][1]]->rent_2_houses, board[card_list[4][2]]->rent_2_houses);
-		    printf("║" RESET RED" Rent with x3:  $%-5d " DIM "║\t║" RESET RED" Rent with x3:  $%-5d " DIM "║\t║" RESET RED" Rent with x3:  $%-5d " DIM "║\n", board[card_list[4][0]]->rent_3_houses, board[card_list[4][1]]->rent_3_houses, board[card_list[4][2]]->rent_3_houses);
-		    printf("║" RESET RED" Rent with x4:  $%-5d " DIM "║\t║" RESET RED" Rent with x4:  $%-5d " DIM "║\t║" RESET RED" Rent with x4:  $%-5d " DIM "║\n", board[card_list[4][0]]->rent_4_houses, board[card_list[4][1]]->rent_4_houses, board[card_list[4][2]]->rent_4_houses);
-		    printf("║" RESET RED" Rent with   :  $%-5d " DIM "║\t║" RESET RED" Rent with   :  $%-5d " DIM "║\t║" RESET RED" Rent with   :  $%-5d " DIM "║\n", board[card_list[4][0]]->rent_hotel, board[card_list[4][1]]->rent_hotel, board[card_list[4][2]]->rent_hotel);
+		    printf("║" RESET RED" Rent with 🏠 x1:  $%-5d " DIM "║\t║" RESET RED" Rent with 🏠 x1:  $%-5d " DIM "║\t║" RESET RED" Rent with 🏠 x1:  $%-5d " DIM "║\n", board[card_list[4][0]]->rent_1_house, board[card_list[4][1]]->rent_1_house, board[card_list[4][2]]->rent_1_house);
+		    printf("║" RESET RED" Rent with 🏠 x2:  $%-5d " DIM "║\t║" RESET RED" Rent with 🏠 x2:  $%-5d " DIM "║\t║" RESET RED" Rent with 🏠 x2:  $%-5d " DIM "║\n", board[card_list[4][0]]->rent_2_houses, board[card_list[4][1]]->rent_2_houses, board[card_list[4][2]]->rent_2_houses);
+		    printf("║" RESET RED" Rent with 🏠 x3:  $%-5d " DIM "║\t║" RESET RED" Rent with 🏠 x3:  $%-5d " DIM "║\t║" RESET RED" Rent with 🏠 x3:  $%-5d " DIM "║\n", board[card_list[4][0]]->rent_3_houses, board[card_list[4][1]]->rent_3_houses, board[card_list[4][2]]->rent_3_houses);
+		    printf("║" RESET RED" Rent with 🏠 x4:  $%-5d " DIM "║\t║" RESET RED" Rent with 🏠 x4:  $%-5d " DIM "║\t║" RESET RED" Rent with 🏠 x4:  $%-5d " DIM "║\n", board[card_list[4][0]]->rent_4_houses, board[card_list[4][1]]->rent_4_houses, board[card_list[4][2]]->rent_4_houses);
+		    printf("║" RESET RED" Rent with 🏨   :  $%-5d " DIM "║\t║" RESET RED" Rent with 🏨   :  $%-5d " DIM "║\t║" RESET RED" Rent with 🏨   :  $%-5d " DIM "║\n", board[card_list[4][0]]->rent_hotel, board[card_list[4][1]]->rent_hotel, board[card_list[4][2]]->rent_hotel);
 		    printf("╠══════════════════════════╣\t╠══════════════════════════╣\t╠══════════════════════════╣\n");
 		    printf("║" RESET RED" House price:      $%-5d " DIM "║\t║" RESET RED" House price:      $%-5d " DIM "║\t║" RESET RED" House price:      $%-5d " DIM "║\n", board[card_list[4][0]]->house_price, board[card_list[4][1]]->house_price, board[card_list[4][2]]->house_price);
-		    printf("║" RESET RED" Hotel price: x4+ $%-5d " DIM "║\t║" RESET RED" Hotel price: x4+ $%-5d " DIM "║\t║" RESET RED" Hotel price: x4+ $%-5d " DIM "║\n", board[card_list[4][0]]->house_price, board[card_list[4][1]]->house_price, board[card_list[4][2]]->house_price);
+		    printf("║" RESET RED" Hotel price:🏠x4+ $%-5d " DIM "║\t║" RESET RED" Hotel price:🏠x4+ $%-5d " DIM "║\t║" RESET RED" Hotel price:🏠x4+ $%-5d " DIM "║\n", board[card_list[4][0]]->house_price, board[card_list[4][1]]->house_price, board[card_list[4][2]]->house_price);
 		    printf("╚══════════════════════════╝\t╚══════════════════════════╝\t╚══════════════════════════╝\n\n" RESET);
 			break;
 		case 5:// Yellow Property
@@ -198,7 +198,7 @@ void show_color_card(MonopolyCase **board, int index)
 			break;
 		case 6: // Green Property
 		    printf(GREEN DIM "╔══════════════════════════╗\n");
-		    printf("║" RESET GREEN BOLD "  Green Property         " DIM "║\n");
+		    printf("║" RESET GREEN BOLD "  Green Property          " DIM "║\n");
 		    printf("╚══════════════════════════╝\n\n" RESET GREEN);
 		
 		    printf(DIM "╔══════════════════════════╗\t╔══════════════════════════╗\t╔══════════════════════════╗\n");
@@ -218,7 +218,7 @@ void show_color_card(MonopolyCase **board, int index)
 			break;		
 		case 7:// Blue Property
 			printf(BLUE DIM "╔══════════════════════════╗\n");
-			printf("║" RESET BLUE BOLD "  Blue Property                 " DIM "║\n");
+			printf("║" RESET BLUE BOLD "  Blue Property           " DIM "║\n");
 			printf("╚══════════════════════════╝\n\n" RESET BLUE);
 
 			printf(DIM "╔══════════════════════════╗\t╔══════════════════════════╗\n");
@@ -258,7 +258,7 @@ void show_color_card(MonopolyCase **board, int index)
 			break;
 		case 9: // Gare Property
 			printf(LIGHT_GRAY DIM "╔══════════════════════════╗\n");
-			printf("║" RESET LIGHT_GRAY BOLD "  Gare Property                 " DIM "║\n");
+			printf("║" RESET LIGHT_GRAY BOLD "  Gare Property           " DIM "║\n");
 			printf("╚══════════════════════════╝\n\n" RESET LIGHT_GRAY);
 
 			printf(DIM "╔══════════════════════════╗\t╔══════════════════════════╗\t╔══════════════════════════╗\t╔══════════════════════════╗\n");

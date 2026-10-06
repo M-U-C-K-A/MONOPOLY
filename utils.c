@@ -7,7 +7,33 @@
 
 int roll_dice(void)
 {
-	return (rand() % 6 + 1) + (rand() % 6 + 1);	// Roll two dice and add the results
+	return rand() % 6 + 1;						// Roll one die (called twice to know if it's a double)
+}
+
+/**
+ * Read a number typed by the player.
+ *
+ * If the player types letters, scanf fails and the letters stay in the
+ * buffer: we empty the buffer and ask again, otherwise the game loops forever.
+ *
+ * @return The number typed by the player.
+ */
+int read_number(void)
+{
+	int number;
+	int result = scanf("%d", &number);
+
+	while (result != 1)
+	{
+		if (result == EOF)						// No more input (Ctrl+D)
+			exit(0);
+		int c = getchar();
+		while (c != '\n' && c != EOF)			// Empty the buffer
+			c = getchar();
+		printf("Entrez un nombre : ");
+		result = scanf("%d", &number);
+	}
+	return number;
 }
 
 void format_string(char *str, char *output)
@@ -44,6 +70,7 @@ void display_menu(void)
 	printf("3. Settings\n");					// Settings
 	printf("4. Rules\n");						// Rules
 	printf("5. Quit the game\n");				// Quit the game
+	printf("6. Build a house\n");				// Build a house on a property
 	printf("Choose an option: ");				// Choose an option
 }
 
@@ -73,9 +100,9 @@ MonopolyCase *create_case(int index, char *name, int price, int rent, int house_
  * Initialize the Monopoly board with 40 cases.
  *
  * This function creates a Monopoly board with 40 cases, each case being a
- * MonopolyCase structure. The name of each case is set to "case X" where X is
- * the index of the case. The price, rent, house price and other properties are
- * set according to the Monopoly rules.
+ * MonopolyCase structure. The name, price and rent of each case come from the
+ * real board. A case with a price of 0 cannot be bought (Depart, Chance,
+ * taxes, prison...). The rents with houses are a multiple of the rent.
  *
  * @return A pointer to the first element of the board, which is an array of
  *         40 MonopolyCase structures.
@@ -83,17 +110,74 @@ MonopolyCase *create_case(int index, char *name, int price, int rent, int house_
 MonopolyCase **init_board(void)
 {
 	MonopolyCase **board = (MonopolyCase **)malloc(40 * sizeof(MonopolyCase *));
+	char *names[40] = {
+		"Depart", "Boulevard de Belleville", "Caisse de Communaute (1)", "Rue Lecourbe", "Impots sur le revenue",
+		"Gare Montparnasse", "Rue de Vaugirard", "Chance (1)", "Rue de Courcelles", "Avenue de la Republique",
+		"Simple visite / prison", "Boulevard de la vilette", "Compagnie electrique", "Avenue de Neuilly", "Rue de Paradis",
+		"Gare de Lyon", "Avenue Mozard", "Caisse de Communaute (2)", "Boulevard Saint-Michel", "Place Pigalle",
+		"Parc Gratuit", "Avenue Matignon", "Chance (2)", "Boulevard Malesherbes", "Avenue Henri-Martin",
+		"Gare du Nord", "Faubourg Saint-Honore", "Place de la Bourse", "Compagnie des eaux", "Rue la Fayette",
+		"Allez en prison", "Avenue de Breteuil", "Avenue Foch", "Caisse de Communaute (3)", "Boulevard des Capucines",
+		"Gare Saint-Lazare", "Chance (3)", "Av. des Champs-Elysees", "Taxe de Luxe", "Rue de la Paix"
+	};
+	int prices[40] = {
+		0, 60, 0, 60, 0, 200, 100, 0, 100, 120,
+		0, 140, 150, 140, 160, 200, 180, 0, 180, 200,
+		0, 220, 0, 220, 240, 200, 260, 260, 150, 280,
+		0, 300, 300, 0, 320, 200, 0, 350, 0, 400
+	};
+	int rents[40] = {
+		0, 2, 0, 4, 0, 25, 6, 0, 6, 8,
+		0, 10, 0, 10, 12, 25, 14, 0, 14, 16,
+		0, 18, 0, 18, 20, 25, 22, 22, 0, 24,
+		0, 26, 26, 0, 28, 25, 0, 35, 0, 50
+	};
 
 	for (int i = 0; i < 40; i++)
 	{
-		int e = i / 8;													// temporary variable used to set the properties of each case
-		board[i] = create_case(i, (char *)malloc(50 * sizeof(char)),
-			20 + e * 10, 1 + e, 50 + e * 25, 2 + e * 2, 10 + e * 5, 
-			20 + e * 10, 50 + e * 25, 100 + e * 50, -1, 4);				// Create a new case with the given parameters
-		sprintf(board[i]->name, "case %d", i);							// Set the name of the case
+		int house_price = 50 * (i / 10 + 1);							// 50, 100, 150 or 200 depending on the side of the board
+		int r = rents[i];
+		board[i] = create_case(i, names[i], prices[i], r, house_price,
+			r * 5, r * 15, r * 30, r * 40, r * 50, -1, 0);				// Create a new case with the given parameters
+	}
+	for (int i = 5; i < 40; i += 10)									// The 4 stations: 25, 50, 100 or 200 with 1 to 4 stations
+	{
+		board[i]->rent_1_house = 25;
+		board[i]->rent_2_houses = 50;
+		board[i]->rent_3_houses = 100;
+		board[i]->rent_4_houses = 200;
 	}
 
 	return board;
+}
+
+/**
+ * Check if a player owns all the properties of a color.
+ *
+ * @param board     The Monopoly board.
+ * @param player_id The player.
+ * @param index     A case of the color to check.
+ * @return 1 if the player owns the whole color, 0 otherwise (and always 0 for
+ *         the stations and the companies, where you can't build).
+ */
+int own_color(MonopolyCase **board, int player_id, int index)
+{
+	// color of each case: 0 = brown ... 7 = dark blue, -1 = no color (station, company, chance...)
+	int colors[40] = {
+		-1, 0, -1, 0, -1, -1, 1, -1, 1, 1,
+		-1, 2, -1, 2, 2, -1, 3, -1, 3, 3,
+		-1, 4, -1, 4, 4, -1, 5, 5, -1, 5,
+		-1, 6, 6, -1, 6, -1, -1, 7, -1, 7
+	};
+
+	if (colors[index] == -1)
+		return 0;
+	for (int i = 0; i < 40; i++)
+	{
+		if (colors[i] == colors[index] && board[i]->owner_id != player_id)
+			return 0;
+	}
+	return 1;
 }
 
 /**
@@ -184,9 +268,13 @@ void show_board(MonopolyCase **board)
  * @brief Clears the terminal to display a cleaner Monopoly game screen.
  *
  * @details Function that clears the terminal by using the "cls" command for
- *          Windows. Other systems are not supported.
+ *          Windows and the "clear" command for Mac and Linux.
  */
 void clear_terminal(void)
 {
+#ifdef _WIN32
 	system("cls");
+#else
+	system("clear");
+#endif
 }

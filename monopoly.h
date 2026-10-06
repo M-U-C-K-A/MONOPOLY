@@ -73,10 +73,11 @@ typedef struct MonopolyCase {
 // Structure pour chaque joueur
 typedef struct Player {
 	char name[50];	// Name of the player
-	char color[10]; // Couleur ANSI choisie
+	char color[30]; // Couleur ANSI choisie (30 car le jaune fait 19 caracteres)
 	int money;		// Money of the player
 	int position; 	// Position sur le plateau (0-39)
-	int in_jail;	// 0 = not in jail, 1 = in jail
+	int in_jail;	// 0 = not in jail, 1 a 3 = nombre de tours en prison
+	int bankrupt;	// 1 = le joueur a perdu (plus d'argent)
 } Player;
 
 
@@ -94,3 +95,5 @@ const char*         check_house(MonopolyCase* case_ptr, int line);
 void				show_color_card(MonopolyCase **board, int index);
 void				display_menu(void);
 int					roll_dice(void);
+int					read_number(void);
+int					own_color(MonopolyCase **board, int player_id, int index);

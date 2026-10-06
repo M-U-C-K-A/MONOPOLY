@@ -1,6 +1,13 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="src/plateau-dark.svg">
+    <img src="src/plateau-light.svg" width="640" alt="Isometric line drawing of a Monopoly board: the ring of forty squares, a few houses and a hotel, a pawn and two dice in the middle">
+  </picture>
+</p>
+
 # Monopoly in C
 
-This is a simple implementation of the Monopoly game in C language.
+This is a simple implementation of the Monopoly game in C language, played in the terminal with the French board (Rue de la Paix, Avenue Foch, Gare de Lyon...).
 ```c
 //      __  __  ___  _   _  ___  ____   ___  _  __   __                                            
 //     |  \/  |/ _ \| \ | |/ _ \|  _ \ / _ \| | \ \ / /                                            
@@ -15,121 +22,84 @@ This is a simple implementation of the Monopoly game in C language.
 //       ██║   ███████╗██║  ██║██║ ╚═╝ ██║██║██║ ╚████║██║  ██║███████╗    ███████╗██████╔╝██║   ██║   ██║╚██████╔╝██║ ╚████║    ██╗     
 ```
 
-The game is played on the command line, and the game state is stored in a structure.
-
-The game is composed of the following parts:
-
 ![monopoly exemple](src/image.png)
 
+## Compile and play
 
-* `main.c`: The main function of the game, which initializes the game and starts the game loop.
-* `utils.c`: A collection of utility functions used throughout the game.
-* `monopoly.h`: The header file which contains the game structure and function prototypes.
+On Mac or Linux:
 
-The game loop is as follows:
+```bash
+make
+./monopoly
+```
 
-1. The player rolls two dices to determine how many steps they can move.
-2. The player moves the corresponding number of steps on the board.
-3. The player lands on a square and the game checks if the square has a special action.
-4. If the square has a special action, the game performs the action.
-5. The game checks if the player has won or lost.
-6. If the player has won or lost, the game ends. Otherwise, the game loop continues.
+Without `make`: `gcc -Wall -Wextra main.c utils.c display.c -o monopoly`.
 
-The game has the following special actions:
+On Windows, run `MONOPOLY.exe`, or compile with MinGW: `gcc main.c utils.c display.c -o MONOPOLY.exe`.
 
-* When the player lands on a square with a property, they can buy the property.
-* When the player lands on a square with a chance card, they draw the top card from the chance deck and follow the instructions on the card.
-* When the player lands on a square with a community chest card, they draw the top card from the community chest deck and follow the instructions on the card.
-* When the player lands on a square with a tax, they must pay the bank the amount of money indicated on the square.
-* When the player lands on a square with a fine, they must pay the bank the amount of money indicated on the square.
-* When the player lands on a square with a bonus, they receive the amount of money indicated on the square.
-* When the player lands on a square with a free parking, they receive all the money that has been put in the free parking pot.
-* When the player lands on a square with a go to jail, they must move directly to the jail square.
-* When the player lands on a square with a go square, they receive the amount of money indicated on the square.
+The board is wide (about 190 characters): enlarge the terminal window before you play.
 
-The game has the following properties:
+## The files
 
-* Baltic Avenue
-* Mediterranean Avenue
-* Oriental Avenue
-* Vermont Avenue
-* Connecticut Avenue
-* States Avenue
-* Virginia Avenue
-* St. Charles Place
-* States Avenue
-* Virginia Avenue
-* St. James Place
-* Tennessee Avenue
-* New York Avenue
-* Kentucky Avenue
-* Indiana Avenue
-* Illinois Avenue
-* Atlantic Avenue
-* Ventnor Avenue
-* Marvin Gardens
-* Pacific Avenue
-* North Carolina Avenue
-* Pennsylvania Avenue
-* Park Place
-* Boardwalk
+* `main.c`: creates the players, then the game loop (the menu, the dice, what happens on each case).
+* `utils.c`: the board (names, prices, rents), the dice, reading a number, the display of the board.
+* `display.c`: the cards of the properties and the rules.
+* `monopoly.h`: the structures of a case and of a player, and the function prototypes.
 
-The game has the following chance cards:
+## How a turn works
 
-* "Bank error in your favor, collect $200."
-* "Doctor's fees, pay $50."
-* "Get out of jail free. This card may be kept until needed."
-* "Go back three spaces."
-* "Go directly to jail."
-* "Income tax refund, collect $20."
-* "It is your birthday, collect $10 from each player."
-* "Life insurance matures, collect $100."
-* "Pay school tax of $150."
-* "Sell stock, get $45."
-* "Super tax, pay $150."
-* "You have won first prize in a beauty contest, collect $10."
-* "You inherit $100."
+Each player starts with 1500$ on the case "Depart". On his turn, the player chooses in the menu:
 
-The game has the following community chest cards:
+1. **Roll the dice**: the player moves forward, and the game checks the case he lands on. With a double, he plays again.
+2. **View cards/colors**: the card of a case, or all the cards of a color.
+3. **Settings**: change the money of a player.
+4. **Rules**: the full rules of Monopoly.
+5. **Quit the game**.
+6. **Build a house**: on a property, when the player owns the whole color (5 houses = a hotel).
 
-* "Bank loan, collect $150."
-* "From sale of stock, get $45."
-* "Get out of jail free. This card may be kept until needed."
-* "Go back three spaces."
-* "Go to jail."
-* "Income tax refund, collect $20."
-* "It is your birthday, collect $10 from each player."
-* "Life insurance matures, collect $100."
-* "Pay school tax of $150."
-* "You have won first prize in a beauty contest, collect $10."
-* "You inherit $100."
+Only rolling the dice ends the turn: you can look at the cards or build before.
 
-The game has the following bonuses:
+## What happens on each case
 
-* "Collect $200."
-* "Collect $150."
-* "Collect $100."
-* "Collect $50."
-* "Collect $20."
-* "Collect $10."
+* **A property, a station or a company nobody owns**: the player can buy it.
+* **A case owned by another player**: the player pays the rent to the owner.
+  * Property: the rent depends on the number of houses, and is doubled without houses when the owner has the whole color.
+  * Station: 25$, 50$, 100$ or 200$ depending on the number of stations of the owner.
+  * Company: 4 times the dice, or 10 times with both companies.
+* **Passing by "Depart"**: the player receives 200$.
+* **Impots sur le revenue**: pay 200$. **Taxe de Luxe**: pay 100$.
+* **Chance or Caisse de Communaute**: the player draws a card (see below).
+* **Allez en prison**: the player goes to jail. To get out, he must roll a double; on his third turn in jail he pays 50$ and gets out.
+* **Parc Gratuit** and **Simple visite**: nothing happens.
 
-The game has the following fines:
+A player with less than 0$ has lost: his properties go back to the bank. The last player still in the game wins.
 
-* "Pay $200."
-* "Pay $150."
-* "Pay $100."
-* "Pay $50."
-* "Pay $20."
-* "Pay $10."
+## The cards
 
-The game has the following free parking:
+The Chance and Caisse de Communaute cards are drawn at random:
 
-* "Collect all the money that has been put in the free parking pot."
+* "La banque vous verse un dividende de 50$."
+* "Payez la note du medecin : 50$."
+* "Avancez jusqu'a la case Depart, recevez 200$."
+* "Allez en prison !"
+* "Vous heritez de 100$."
+* "Payez vos frais de scolarite : 150$."
 
-The game has the following go to jail:
+## The properties
 
-* "Move directly to the jail square."
+| Color | Properties |
+| --- | --- |
+| Brown | Boulevard de Belleville, Rue Lecourbe |
+| Light blue | Rue de Vaugirard, Rue de Courcelles, Avenue de la Republique |
+| Pink | Boulevard de la Villette, Avenue de Neuilly, Rue de Paradis |
+| Orange | Avenue Mozart, Boulevard Saint-Michel, Place Pigalle |
+| Red | Avenue Matignon, Boulevard Malesherbes, Avenue Henri-Martin |
+| Yellow | Faubourg Saint-Honore, Place de la Bourse, Rue la Fayette |
+| Green | Avenue de Breteuil, Avenue Foch, Boulevard des Capucines |
+| Dark blue | Avenue des Champs-Elysees, Rue de la Paix |
+| Stations | Gare Montparnasse, Gare de Lyon, Gare du Nord, Gare Saint-Lazare |
+| Companies | Compagnie electrique, Compagnie des eaux |
 
-The game has the following go square:
+## Not done yet
 
-* "Collect $200."
+The ideas for later are in [help.md](help.md): save a game, trades between players, mortgages, auctions...
