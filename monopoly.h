@@ -20,6 +20,7 @@
 #define ITALIC      		"\033[3m"
 #define UNDERLINE   		"\033[4m"
 #define BLINK       		"\033[5m"
+#define BLACK       		"\033[30m"
 #define RED         		"\033[31m"
 #define GREEN       		"\033[32m"
 #define YELLOW      		"\033[38;2;250;204;21m"
@@ -46,7 +47,7 @@
 #define BG_BRIGHT_MAGENTA 	"\033[105m"
 #define BG_BRIGHT_CYAN    	"\033[106m"
 #define ORANGE          	"\033[38;2;249;115;22m"   		// Orange text
-#define BROWN       	    "\033[38;2;76;43;32m"   		// Brown text
+#define BROWN       	    "\033[38;2;166;110;77m"   		// Brown text (lighter, readable on a dark terminal)
 #define BG_ORANGE	        "\033[48;2;249;115;22m"   		// Orange background
 #define BG_BROWN         	"\033[48;2;76;43;32m"   		// Brown background
 #define BEIGE               "\033[38;5;230m"  				// Beige text
@@ -68,6 +69,7 @@ typedef struct MonopolyCase {
 	int rent_hotel;         // Rent with a hotel
 	int owner_id;           // ID of the player who owns the case
 	int house_count;        // Number of houses on the case
+	int group;              // Color: 0 = brown ... 7 = dark blue, 8 = company, 9 = station, -1 = other
 } MonopolyCase;
 
 // Structure pour chaque joueur
@@ -85,15 +87,14 @@ typedef struct Player {
 MonopolyCase*       create_case(int index, char *name, int price, int rent, int house_price, int rent_1_house, int rent_2_houses, int rent_3_houses, int rent_4_houses, int rent_hotel, int owner_id, int house_count);
 MonopolyCase**      init_board(void);
 void                clear_terminal(void);
-void                show_card(MonopolyCase **board, int index);
-void                show_board(MonopolyCase **board);
-void                format_string(char *str, char *output);
-void                format_price(int price, char *output);
-char*               house(MonopolyCase *property);
+void                show_card(MonopolyCase **board, Player *players, int index);
+void                show_board(MonopolyCase **board, Player *players, int player_count, int current_player);
 void                show_rules(void);
-const char*         check_house(MonopolyCase* case_ptr, int line);
-void				show_color_card(MonopolyCase **board, int index);
+void				show_color_card(MonopolyCase **board, Player *players, int index);
 void				display_menu(void);
 int					roll_dice(void);
 int					read_number(void);
 int					own_color(MonopolyCase **board, int player_id, int index);
+int					visible_length(char *text);
+void				print_padded(char *text, int width);
+void				print_centered(char *text, int width);

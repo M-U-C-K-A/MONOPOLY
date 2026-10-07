@@ -51,80 +51,6 @@ Player create_player(int player_number)
 
 
 
-void player_card(Player *players, int player_count)
-{
-	char *places[] = {
-		"Depart", 
-		"Boulevard de Belleville", 
-		"Caisse de Communaute (1)",
-		"Rue Lecourbe",
-		"Impots sur le revenue",
-		"Gare Montparnasse",
-		"Rue de Vaugirard",
-		"Chance (1)",
-		"Rue de Courcelles",
-		"Avenue de la Republique", 
-		"Simple visite / prison", 
-		"Boulevard de la vilette",
-		"Compagnie electrique",
-		"Avenue de Neuilly",
-		"Rue de Paradis",
-		"Gare de Lyon",
-		"Avenue Mozard",
-		"Caisse de Communaute (2)",
-		"Boulevard Saint-Michel",
-		"Place Pigalle",
-		"Parc Gratuit",
-		"Avenue Matignon",
-		"Chance (2)",
-		"Boulevard Malesherbes",
-		"Avenue Henri-Martin",
-		"Gare du Nord",
-		"Faubourg Saint-Honore",
-		"Place de la Bourse",
-		"Compagnie des eaux",
-		"Rue la Fayette",
-		"Allez en prison",
-		"Avenue de Breteuil",
-		"Avenue Foch",
-		"Caisse de Communaute (3)",
-		"Boulevard des Capucines",
-		"Gare Saint-Lazare",
-		"Chance (3)",
-		"Avenue des Champs-Elysees",
-		"Taxe de Luxe",
-		"Rue de la Paix"
-	};
-	for (int i = 0; i < player_count; i++) {
-		Player *p = &players[i];
-		char name[50];
-		strncpy(name, p->name, 10);
-		name[10] = '\0';	// strncpy doesn't add the \0 when the name is too long
-		char color[30];
-		strcpy(color, p->color);
-		int money = p->money;
-		int position = p->position;
-		int in_jail = p->in_jail;
-		char position_str[27];
-		strncpy(position_str, places[position], 27);
-
-		char *status = "                 ";
-		if (p->bankrupt)
-			status = RED"PLAYER BANKRUPT !";
-		else if (in_jail)
-			status = RED"PLAYER IN JAIL ! ";
-
-		printf("%s", color);
-		printf("\n");
-		printf( DIM "╔════════════════════════════════════════════════╗\n");
-		printf("║"RESET"%s  %-12s              %s%s" DIM "   ║\n",
-		       color, name, status, color);
-		printf("║"RESET"%s  $%-10d  case:%-27s "DIM"║\n", color, money, position_str);
-		printf("╚════════════════════════════════════════════════╝\n");
-		printf(RESET);
-	}
-}
-
 /**
  * Calcule le loyer a payer sur une case qui appartient a un joueur.
  *
@@ -177,11 +103,11 @@ void tirer_carte(Player *player)
 			player->money += 50;
 			break;
 		case 1:
-			printf("Payez la note du medecin : 50$.\n");
+			printf("Payez la note du médecin : 50$.\n");
 			player->money -= 50;
 			break;
 		case 2:
-			printf("Avancez jusqu'a la case Depart, recevez 200$.\n");
+			printf("Avancez jusqu'à la case Départ, recevez 200$.\n");
 			player->position = 0;
 			player->money += 200;
 			break;
@@ -191,11 +117,11 @@ void tirer_carte(Player *player)
 			player->in_jail = 1;
 			break;
 		case 4:
-			printf("Vous heritez de 100$.\n");
+			printf("Vous héritez de 100$.\n");
 			player->money += 100;
 			break;
 		case 5:
-			printf("Payez vos frais de scolarite : 150$.\n");
+			printf("Payez vos frais de scolarité : 150$.\n");
 			player->money -= 150;
 			break;
 	}
@@ -216,7 +142,7 @@ void arrive_sur_case(MonopolyCase **board, Player *players, int current_player, 
 		player->in_jail = 1;
 	}
 	else if (player->position == 4) {	// Impots sur le revenu
-		printf("Vous payez 200$ d'impots.\n");
+		printf("Vous payez 200$ d'impôts.\n");
 		player->money -= 200;
 	}
 	else if (player->position == 38) {	// Taxe de luxe
@@ -231,11 +157,11 @@ void arrive_sur_case(MonopolyCase **board, Player *players, int current_player, 
 	else if (c->price > 0) {	// Une case qu'on peut acheter
 		if (c->owner_id == -1) {
 			if (player->money >= c->price) {
-				printf("%s n'appartient a personne. L'acheter pour %d$ ? (1 = oui, 0 = non) ", c->name, c->price);
+				printf("%s n'appartient à personne. L'acheter pour %d$ ? (1 = oui, 0 = non) ", c->name, c->price);
 				if (read_number() == 1) {
 					player->money -= c->price;
 					c->owner_id = current_player;
-					printf(GREEN "Vous avez achete %s !\n" RESET, c->name);
+					printf(GREEN "Vous avez acheté %s !\n" RESET, c->name);
 				}
 			}
 			else
@@ -243,7 +169,7 @@ void arrive_sur_case(MonopolyCase **board, Player *players, int current_player, 
 		}
 		else if (c->owner_id != current_player) {
 			int loyer = calcul_loyer(board, player->position, dice_result);
-			printf(RED "%s appartient a %s : vous payez %d$ de loyer.\n" RESET, c->name, players[c->owner_id].name, loyer);
+			printf(RED "%s appartient à %s : vous payez %d$ de loyer.\n" RESET, c->name, players[c->owner_id].name, loyer);
 			player->money -= loyer;
 			players[c->owner_id].money += loyer;
 		}
@@ -279,10 +205,9 @@ int main(void)
 	
 	while (running) {
 		clear_terminal();
-		show_board(board);
-		player_card(players, player_count);
+		show_board(board, players, player_count, current_player);
 		Player *player = &players[current_player];
-		printf("%s%s%s, c'est votre tour !\n", player->color, player->name, RESET);
+		printf("\n  %s" BOLD "%s" RESET ", c'est votre tour !\n", player->color, player->name);
 
 		display_menu();
 
@@ -303,7 +228,7 @@ int main(void)
 						printf("Double ! Vous sortez de prison.\n");
 						player->in_jail = 0;
 					} else if (player->in_jail == 3) {
-						printf("3eme tour en prison : vous payez 50$ et vous sortez.\n");
+						printf("3e tour en prison : vous payez 50$ et vous sortez.\n");
 						player->money -= 50;
 						player->in_jail = 0;
 					} else {
@@ -318,7 +243,7 @@ int main(void)
 					if (player->position >= 40) {	// Il a fait le tour du plateau
 						player->position = player->position - 40;
 						player->money += 200;
-						printf(GREEN "Vous passez par la case Depart : +200$\n" RESET);
+						printf(GREEN "Vous passez par la case Départ : +200$\n" RESET);
 					}
 					printf("Vous êtes maintenant sur la case %d: %s\n", player->position, board[player->position]->name);
 					arrive_sur_case(board, players, current_player, dice_result);
@@ -348,33 +273,25 @@ int main(void)
 			case 2: {
 				// Voir une carte ou une zone
 				int card_choice;
-				printf("1. Voir une carte\n2. Voir une zone\nchoix (1-2): ");
+				printf("1. Voir une case\n2. Voir une couleur\nVotre choix : ");
 				card_choice = read_number();
 				if (card_choice == 1) {
 					// Voir une carte
 					int card_index;
-					printf("Quelle carte souhaitez-vous voir ? (0-39) ");
+					printf("Quelle case souhaitez-vous voir ? (0 = Départ ... 39 = Rue de la Paix) ");
 					card_index = read_number();
-					show_card(board, card_index);
-					if (card_index >= 0 && card_index < 40 && board[card_index]->owner_id >= 0)
-						printf("Proprietaire : %s\n", players[board[card_index]->owner_id].name);
+					show_card(board, players, card_index);
 				} else if (card_choice == 2) {
 					// Voir une zone
 					int zone_index;
 					clear_terminal();
-					printf(BOLD UNDERLINE"Quelle zone souhaitez-vous voir ? (0-9)\n"RESET);
-					printf(BROWN"0 = Marron\n");
-					printf(BRIGHT_CYAN"1 = bleu ciel\n");
-					printf(MAGENTA"2 = rose\n");
-					printf(ORANGE"3 = orange\n");
-					printf(RED"4 = rouge\n");
-					printf(YELLOW"5 = jaune\n");
-					printf(GREEN"6 = vert\n");
-					printf(BLUE"7 = bleu foncé\n");
-					printf(BEIGE"8 = compagnies\n");
-					printf(LIGHT_GRAY"9 = gares\n"RESET);
+					printf(BOLD "\nQuelle couleur souhaitez-vous voir ?\n\n" RESET);
+					printf("  " BROWN "0  marron" RESET "        " ORANGE "3  orange" RESET "        " GREEN "6  vert" RESET "          " LIGHT_GRAY "9  gares\n" RESET);
+					printf("  " BRIGHT_CYAN "1  bleu ciel" RESET "     " RED "4  rouge" RESET "         " BLUE "7  bleu foncé\n" RESET);
+					printf("  " BRIGHT_MAGENTA "2  rose" RESET "          " YELLOW "5  jaune" RESET "         " LIGHT_GRAY "8  compagnies\n" RESET);
+					printf("\nVotre choix : ");
 					zone_index = read_number();
-					show_color_card(board, zone_index);
+					show_color_card(board, players, zone_index);
 				}
 				break;
 			}
@@ -421,14 +338,14 @@ int main(void)
 				else if (!own_color(board, current_player, index))
 					printf("Il faut avoir tous les terrains de la couleur pour construire.\n");
 				else if (board[index]->house_count == 5)
-					printf("Il y a deja un hotel sur cette case.\n");
+					printf("Il y a déjà un hôtel sur cette case.\n");
 				else if (player->money < board[index]->house_price)
 					printf("Vous n'avez pas assez d'argent (%d$).\n", board[index]->house_price);
 				else {
 					player->money -= board[index]->house_price;
 					board[index]->house_count++;
 					if (board[index]->house_count == 5)
-						printf(GREEN "Hotel construit sur %s !\n" RESET, board[index]->name);
+						printf(GREEN "Hôtel construit sur %s !\n" RESET, board[index]->name);
 					else
 						printf(GREEN "Maison construite sur %s (%d maison(s)).\n" RESET, board[index]->name, board[index]->house_count);
 				}
@@ -447,7 +364,7 @@ int main(void)
 				players_left++;
 		}
 		if (players_left == 1) {
-			printf(BOLD GREEN "\n%s a gagne la partie !\n" RESET, players[current_player].name);
+			printf(BOLD GREEN "\n%s a gagné la partie !\n" RESET, players[current_player].name);
 			running = 0;
 		}
 

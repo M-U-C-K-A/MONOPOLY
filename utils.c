@@ -36,42 +36,54 @@ int read_number(void)
 	return number;
 }
 
-void format_string(char *str, char *output)
+/**
+ * Number of characters seen on the screen.
+ *
+ * strlen counts bytes, but in UTF-8 an accent (é, è...) or a box character
+ * (─, █...) takes 2 or 3 bytes. Only the first byte of a character is not
+ * of the form 10xxxxxx, so we count only those.
+ */
+int visible_length(char *text)
 {
-	int len = strlen(str);						// Length of the string
-	if (len > 24)								// If the string is longer than 24 characters
+	int length = 0;
+
+	for (int i = 0; text[i] != '\0'; i++)
 	{
-		strncpy(output, str, 24); 				// Crop to 24 characters
-		output[24] = '\0';		  				// Add the string terminator
+		if ((text[i] & 0xC0) != 0x80)
+			length++;
 	}
-	else
-		sprintf(output, "%-24s", str); 			// Pad to 24 characters
+	return length;
 }
 
-void format_price(int price, char *output)
+/**
+ * Print a text followed by spaces, to take exactly `width` columns.
+ * (printf("%-10s") counts the bytes, so it is wrong with accents.)
+ */
+void print_padded(char *text, int width)
 {
-	char price_str[30];							// String to store the price
-	sprintf(price_str, "$%d", price); 			// Add a dollar sign to the price
-	int len = strlen(price_str);				// Length of the string
-	if (len > 24)
-	{
-		strncpy(output, price_str, 24); 		// Crop if necessary
-		output[24] = '\0';						// Add the string terminator
-	}
-	else
-		sprintf(output, "%-24s", price_str); 	// Pad to 24 characters
+	printf("%s", text);
+	for (int i = visible_length(text); i < width; i++)
+		printf(" ");
+}
+
+/**
+ * Print a text in the middle of `width` columns.
+ */
+void print_centered(char *text, int width)
+{
+	int left = (width - visible_length(text)) / 2;
+
+	for (int i = 0; i < left; i++)
+		printf(" ");
+	print_padded(text, width - left);
 }
 
 void display_menu(void)
 {
-	printf("\nMenu:\n");						// Display the menu
-	printf("1. Roll the dice\n");				// Roll the dice
-	printf("2. View cards/colors\n");			// View the cards
-	printf("3. Settings\n");					// Settings
-	printf("4. Rules\n");						// Rules
-	printf("5. Quit the game\n");				// Quit the game
-	printf("6. Build a house\n");				// Build a house on a property
-	printf("Choose an option: ");				// Choose an option
+	printf("\n");
+	printf("  " BOLD "1" RESET "  Lancer les dés        " BOLD "2" RESET "  Voir une carte        " BOLD "3" RESET "  Paramètres\n");
+	printf("  " BOLD "4" RESET "  Règles du jeu         " BOLD "5" RESET "  Quitter               " BOLD "6" RESET "  Construire une maison\n");
+	printf("\n  Votre choix : ");
 }
 
 
@@ -111,14 +123,14 @@ MonopolyCase **init_board(void)
 {
 	MonopolyCase **board = (MonopolyCase **)malloc(40 * sizeof(MonopolyCase *));
 	char *names[40] = {
-		"Depart", "Boulevard de Belleville", "Caisse de Communaute (1)", "Rue Lecourbe", "Impots sur le revenue",
-		"Gare Montparnasse", "Rue de Vaugirard", "Chance (1)", "Rue de Courcelles", "Avenue de la Republique",
-		"Simple visite / prison", "Boulevard de la vilette", "Compagnie electrique", "Avenue de Neuilly", "Rue de Paradis",
-		"Gare de Lyon", "Avenue Mozard", "Caisse de Communaute (2)", "Boulevard Saint-Michel", "Place Pigalle",
-		"Parc Gratuit", "Avenue Matignon", "Chance (2)", "Boulevard Malesherbes", "Avenue Henri-Martin",
-		"Gare du Nord", "Faubourg Saint-Honore", "Place de la Bourse", "Compagnie des eaux", "Rue la Fayette",
-		"Allez en prison", "Avenue de Breteuil", "Avenue Foch", "Caisse de Communaute (3)", "Boulevard des Capucines",
-		"Gare Saint-Lazare", "Chance (3)", "Av. des Champs-Elysees", "Taxe de Luxe", "Rue de la Paix"
+		"Départ", "Boulevard de Belleville", "Caisse de communauté", "Rue Lecourbe", "Impôts sur le revenu",
+		"Gare Montparnasse", "Rue de Vaugirard", "Chance", "Rue de Courcelles", "Avenue de la République",
+		"Prison / Simple visite", "Boulevard de la Villette", "Compagnie d'électricité", "Avenue de Neuilly", "Rue de Paradis",
+		"Gare de Lyon", "Avenue Mozart", "Caisse de communauté", "Boulevard Saint-Michel", "Place Pigalle",
+		"Parc Gratuit", "Avenue Matignon", "Chance", "Boulevard Malesherbes", "Avenue Henri-Martin",
+		"Gare du Nord", "Faubourg Saint-Honoré", "Place de la Bourse", "Compagnie des eaux", "Rue La Fayette",
+		"Allez en prison", "Avenue de Breteuil", "Avenue Foch", "Caisse de communauté", "Boulevard des Capucines",
+		"Gare Saint-Lazare", "Chance", "Avenue des Champs-Élysées", "Taxe de luxe", "Rue de la Paix"
 	};
 	int prices[40] = {
 		0, 60, 0, 60, 0, 200, 100, 0, 100, 120,
@@ -132,6 +144,13 @@ MonopolyCase **init_board(void)
 		0, 18, 0, 18, 20, 25, 22, 22, 0, 24,
 		0, 26, 26, 0, 28, 25, 0, 35, 0, 50
 	};
+	// color of each case: 0 = brown ... 7 = dark blue, 8 = company, 9 = station, -1 = other (chance, prison...)
+	int groups[40] = {
+		-1, 0, -1, 0, -1, 9, 1, -1, 1, 1,
+		-1, 2, 8, 2, 2, 9, 3, -1, 3, 3,
+		-1, 4, -1, 4, 4, 9, 5, 5, 8, 5,
+		-1, 6, 6, -1, 6, 9, -1, 7, -1, 7
+	};
 
 	for (int i = 0; i < 40; i++)
 	{
@@ -139,6 +158,7 @@ MonopolyCase **init_board(void)
 		int r = rents[i];
 		board[i] = create_case(i, names[i], prices[i], r, house_price,
 			r * 5, r * 15, r * 30, r * 40, r * 50, -1, 0);				// Create a new case with the given parameters
+		board[i]->group = groups[i];
 	}
 	for (int i = 5; i < 40; i += 10)									// The 4 stations: 25, 50, 100 or 200 with 1 to 4 stations
 	{
@@ -162,106 +182,16 @@ MonopolyCase **init_board(void)
  */
 int own_color(MonopolyCase **board, int player_id, int index)
 {
-	// color of each case: 0 = brown ... 7 = dark blue, -1 = no color (station, company, chance...)
-	int colors[40] = {
-		-1, 0, -1, 0, -1, -1, 1, -1, 1, 1,
-		-1, 2, -1, 2, 2, -1, 3, -1, 3, 3,
-		-1, 4, -1, 4, 4, -1, 5, 5, -1, 5,
-		-1, 6, 6, -1, 6, -1, -1, 7, -1, 7
-	};
+	int group = board[index]->group;
 
-	if (colors[index] == -1)
+	if (group < 0 || group > 7)					// station, company, chance... : no houses here
 		return 0;
 	for (int i = 0; i < 40; i++)
 	{
-		if (colors[i] == colors[index] && board[i]->owner_id != player_id)
+		if (board[i]->group == group && board[i]->owner_id != player_id)
 			return 0;
 	}
 	return 1;
-}
-
-/**
- * Return a string representing the houses and/or hotel on a MonopolyCase
- *
- * This function takes a pointer to a MonopolyCase structure and an integer
- * argument line. The line argument is used to determine which part of the
- * string to return. If line is 0, the string will start with the number of
- * houses (up to 4) and end with the number of hotels (0 or 1). If line is 1,
- * the string will only contain the number of hotels (0 or 1). The string
- * will be at most 10 characters long.
- *
- * @param case_ptr Pointer to a MonopolyCase structure
- * @param line     Integer argument to determine which part of the string to
- *                 return. 0 for the houses and 1 for the hotel.
- * @return A constant string representing the houses and/or hotel on a
- *         MonopolyCase.
- */
-const char *check_house(MonopolyCase *case_ptr, int line)
-{
-	static char output[10];			// String to return
-
-	switch (case_ptr->house_count)	// Determine which part of the string to return
-	{
-	case 0:
-		return "  ";
-	case 1:
-		return line == 0 ? "🏠  " : "";
-	case 2:
-		return "🏠  ";
-	case 3:
-		return line == 0 ? "🏠🏠" : "🏠  ";	
-	case 4:
-		return "🏠🏠";
-	case 5:
-		return line == 0 ? "🏨  " : "";
-	}
-	return output;
-}
-
-/**
- * Print the Monopoly board with the given board.
- *
- * This function prints the Monopoly board with the given board. The board is
- * an array of 40 MonopolyCase structures. Each case is represented by its
- * name, price, rent, house price, rent with 1, 2, 3 or 4 houses and rent with
- * a hotel. The houses and hotel are represented by " " and " ".
- *
- * @param board The Monopoly board to print.
- */
-void show_board(MonopolyCase **board)
-{
-	printf(" Parc             ║   Avenue     ║    chance    ║  Boulevard   ║    Avenue    ║   Gare du    ║ Faubourg     ║  Place de    ║  Compagnie   ║   Rue la     ║    Allez en     \n");
-	printf("Gratuit           ║   Matignon   ║      🍀      ║  Malesherbes ║ Henri-Martin ║   Nord  🚅   ║ Saint-Honoré ║  la bourse   ║   des eaux   ║   fayette    ║    prison       \n");
-	printf("══════════════════╬" BG_RED RED "══════════════" RESET "╩══════════════╩" BG_RED RED "══════════════" RESET "╩" BG_RED RED "══════════════" RESET "╩══════════════╩" BG_YELLOW YELLOW "══════════════" RESET "╩" BG_YELLOW YELLOW "══════════════" RESET "╩══════════════╩" BG_YELLOW YELLOW "══════════════" RESET "╬══════════════════   \n");
-	printf("place         %-4s" BG_ORANGE ORANGE"║" RESET " \t\t\t                                                                                                   \t\t " BG_GREEN GREEN "║" RESET "%-4s Avenue		\n", check_house(board[19], 1), check_house(board[31], 0));
-	printf("Pigalle       %-4s" BG_ORANGE ORANGE"║" RESET " \t\t\t                                                                                                   \t\t " BG_GREEN GREEN "║" RESET "%-4s de breteuil	\n", check_house(board[19], 0), check_house(board[31], 1));
-	printf("══════════════════╣ \t\t\t                                                                                                   \t\t ╠══════════════════	\n");
-	printf("Boulevard     %-4s" BG_ORANGE ORANGE"║" RESET " \t\t\t                                                                                                   \t\t " BG_GREEN GREEN "║" RESET "%-4s avenue		\n", check_house(board[18], 1), check_house(board[32], 0));
-	printf("Saint-Michel  %-4s" BG_ORANGE ORANGE"║" RESET " \t\t\t                                                                                                   \t\t " BG_GREEN GREEN "║" RESET "%-4s Foch			\n", check_house(board[18], 0), check_house(board[32], 1));
-	printf("══════════════════╣ \t\t\t                                                                                                   \t\t ╠══════════════════ 	\n");
-	printf("caisse de         ║ \t\t\t                                                                                                   \t\t ║     caisse de		\n");
-	printf("communauté        ║ \t\t       	 	◘ Achetez. Vendez. Négociez. Gagnez ! ◘		 						 	 ║     communauté	\n");
-	printf("══════════════════╣ \t\t\t       __       __   ______   __    __   ______   _______    ______   __    __      __             \t\t ╠══════════════════	\n");
-	printf("avenue        %-4s" BG_ORANGE ORANGE"║" RESET " \t\t\t      /  \\     /  | /      \\ /  \\  /  | /      \\ /       \\  /      \\ /  |  /  \\    /  |     \t\t\t " BG_GREEN GREEN "║" RESET "%-4s Boulevard		\n", check_house(board[16], 1), check_house(board[34], 0));
-	printf("Mozard        %-4s" BG_ORANGE ORANGE"║" RESET " \t\t\t      $$  \\   /$$ |/$$$$$$  |$$  \\ $$ |/$$$$$$  |$$$$$$$  |/$$$$$$  |$$ |  $$  \\  /$$/          \t\t " BG_GREEN GREEN "║" RESET "%-4s des capucines	\n", check_house(board[16], 0), check_house(board[34], 1));
-	printf("══════════════════╣ \t\t\t      $$$  \\ /$$$ |$$ |  $$ |$$$  \\$$ |$$ |  $$ |$$ |__$$ |$$ |  $$ |$$ |   $$  \\/$$/           \t\t ╠══════════════════	\n");
-	printf("Gare de           ║ \t\t\t      $$$$  /$$$$ |$$ |  $$ |$$$$  $$ |$$ |  $$ |$$    $$/ $$ |  $$ |$$ |    $$  $$\\              \t\t ║     gare 🚅	\n");
-	printf("Lyon 🚅           ║ \t\t\t      $$ $$ $$/$$ |$$ |  $$ |$$ $$ $$ |$$ |  $$ |$$$$$$$/  $$ |  $$ |$$ |     $$$$/                \t\t ║     Saint-Lazare	\n");
-	printf("══════════════════╣ \t\t\t      $$ |$$$/ $$ |$$ \\__$$ |$$ |$$$$ |$$ \\__$$ |$$ |      $$ \\__$$ |$$ |_____ $$ |             \t\t ╠══════════════════	\n");
-	printf("Rue de        %-4s" BG_BRIGHT_MAGENTA BRIGHT_MAGENTA"║" RESET " \t\t\t      $$ | $/  $$ |$$    $$/ $$ | $$$ |$$    $$/ $$ |      $$    $$/ $$       |$$ |                \t\t ║     chance		\n", check_house(board[14], 1));
-	printf("Paradis       %-4s" BG_BRIGHT_MAGENTA BRIGHT_MAGENTA"║" RESET " \t\t\t      $$/      $$/  $$$$$$/  $$/   $$/  $$$$$$/  $$/        $$$$$$/  $$$$$$$$/ $$/                 \t\t ║	 🍀		\n", check_house(board[14], 0));
-	printf("══════════════════╣ \t\t\t                                                                                                   \t\t ╠══════════════════	\n");
-	printf("Avenue de     %-4s" BG_BRIGHT_MAGENTA BRIGHT_MAGENTA"║" RESET " \t\t\t                                                                                                   \t\t " BG_BLUE BLUE "║" RESET "%-4s Avenue des	\n", check_house(board[13], 1), check_house(board[37], 0));
-	printf("Neuilly       %-4s" BG_BRIGHT_MAGENTA BRIGHT_MAGENTA"║" RESET " \t\t\t  " DIM "     _                      _             _            _ _ _   _               _               " RESET "  \t\t " BG_BLUE BLUE "║" RESET "%-4s champs-élysées\n", check_house(board[13], 0), check_house(board[37], 1));
-	printf("══════════════════╣ \t\t\t  " DIM "    | |_ ___ _ __ _ __ ___ (_)_ __   __ _| |   ___  __| (_) |_(_) ___  _ __   | |              " RESET "  \t\t ╠══════════════════	\n");
-	printf("compagnie         ║ \t\t\t  " DIM "    | __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` | |  / _ \\/ _` | | __| |/ _ \\| '_ \\  | |        " RESET "  \t\t\t ║     Taxe de   	\n");
-	printf("électrique        ║ \t\t\t  " DIM "    | ||  __/ |  | | | | | | | | | | (_| | | |  __/ (_| | | |_| | (_) | | | | |_|              " RESET "  \t\t ║     Luxe 💍    	\n");
-	printf("══════════════════╣ \t\t\t  " DIM "     \\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|_|  \\___|\\__,_|_|\\__|_|\\___/|_| |_| (_)       " RESET "  \t\t\t ╠══════════════════	\n");
-	printf("Boulevard de  %-4s" BG_BRIGHT_MAGENTA BRIGHT_MAGENTA"║" RESET " \t\t\t                                                                                                   \t\t " BG_BLUE BLUE "║" RESET "%-4s Rue de    	\n", check_house(board[11], 1), check_house(board[39], 0));
-	printf("la villette   %-4s" BG_BRIGHT_MAGENTA BRIGHT_MAGENTA"║" RESET " \t\t\t                                                                                                   \t\t " BG_BLUE BLUE "║" RESET "%-4s la Paix   	\n", check_house(board[11], 0), check_house(board[39], 1));
-	printf("══════════════════╬" BG_BRIGHT_CYAN BRIGHT_CYAN "══════════════" RESET "╦" BG_BRIGHT_CYAN BRIGHT_CYAN "══════════════" RESET "╦══════════════╦" BG_BRIGHT_CYAN BRIGHT_CYAN "══════════════" RESET "╦══════════════╦══════════════╦" BG_BROWN BROWN "══════════════" RESET "╦══════════════╦" BG_BROWN BROWN "══════════════" RESET "╬══════════════════ \n");
-	printf(" Simple           ║ Avenue de la ║  Rue de      ║    chance    ║ Rue de       ║ Gare  🚅     ║  Impôts sur  ║  Rue         ║  Caisse de   ║ Boulevard de ║     Case         \n");
-	printf(" visite           ║ République   ║  Courcelles  ║      🍀      ║ Vaugirard    ║ Montparnasse ║  le revenue  ║  Lecourbe    ║  Communauté  ║ Belleville   ║     Départ       \n");
 }
 
 /**
